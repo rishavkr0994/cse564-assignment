@@ -4,43 +4,72 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Main {
-
     public static void main(String[] args) throws Exception{
         if (args.length == 0)
-        {
-            throw new IllegalArgumentException("file not exist");
-        }
-        String path = args[0]; //"/Users/lizhuoran/Desktop/File 1.txt";
-        String text = readTextFile(path);
-        String[] Token = splitWords(text);
-        translate(Token);
+            throw new IllegalArgumentException("file path is not provided");
+        String text = readTextFile(args[0]); // "/Users/lizhuoran/Desktop/File 1.txt";
+        ArrayList<String> tokens = splitWords(text);
+        System.out.println(tokens);
+        translate(tokens);
     }
-    public static String readTextFile(String path) throws IOException {
+
+    private static String readTextFile(String path) throws IOException {
         String text = "";
         File file = new File(path);
         BufferedReader br = new BufferedReader(new FileReader(file));
         String str;
-        while ((str = br.readLine()) != null)
-        {
-            text = text + str;
+        while ((str = br.readLine()) != null) {
+            text = text + str + "\n";
         }
         return text;
     }
-    public static String[] splitWords(String text)
-    {
-        text.split("\n");
-        return text;
-    }
-    public static void translate(String[] tokens)
-    {
-        int i = 0;
-        while (i <= tokens.length)
-        {
-            i = checkMethod(tokens, i);
+
+    private static ArrayList<String> splitWords(String text) {
+        ArrayList<String> wordList = new ArrayList<>();
+        String[] lineList = text.split("\n");
+        for (String line: Arrays.stream(lineList).filter(x -> x.isEmpty() == false).toList()) {
+            ArrayList<String> wordListForLine = splitLine(line);
+            wordList.addAll(wordListForLine);
         }
+        return wordList;
+    }
+
+    private static ArrayList<String> splitLine(String line) {
+        ArrayList<String> tokenList = new ArrayList<>();
+
+        int index = 0; String token = "";
+        while (index < line.length()) {
+            char ch = line.charAt(index);
+            if (Character.isLetterOrDigit(ch)) {
+                token += ch;
+            }
+            else if (ch == '(' || ch == ')' || ch == '{' || ch == '}') {
+                if (token.length() > 0) {
+                    tokenList.add(token);
+                    token = "";
+                }
+                tokenList.add(Character.toString(ch));
+            }
+            index++;
+        }
+
+        if (token.length() > 0)
+            tokenList.add(token);
+        return tokenList;
+    }
+
+    private static void translate(ArrayList<String> tokens)
+    {
+        // int i = 0;
+        // while (i <= tokens.size())
+        // {
+        //     i = checkMethod(tokens, i);
+        // }
     }
     public static int checkMethod(String[] tokens, int currentWord)
     {
