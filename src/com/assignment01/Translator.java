@@ -68,7 +68,6 @@ public class Translator {
      */
     private static ArrayList<String> splitLine(String line) {
         ArrayList<String> tokenList = new ArrayList<>();
-
         String currentToken = "";
         for (int index = 0; index < line.length(); index++) {
             char ch = line.charAt(index);
@@ -110,22 +109,8 @@ public class Translator {
         if (tokens.get(currentWord++).matches("[A-za-z0-9]+") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("[");
-            while (currentWord < tokens.size()) {
-                switch (tokens.get(currentWord)) {
-                    case "if":
-                        currentWord = checkIf(tokens, currentWord);
-                        break;
-                    case "while":
-                        currentWord = checkWhile(tokens, currentWord);
-                        break;
-                    case "}":
-                        System.out.print("]");
-                        return ++currentWord;
-                    default:
-                        currentWord = checkInstruction(tokens, currentWord);
-                        break;
-                }
-            }
+            currentWord = checkNext(tokens,currentWord,"]");
+            return currentWord;
         }
         throw new RuntimeException("Syntax Error");
     }
@@ -140,22 +125,8 @@ public class Translator {
         if (tokens.get(currentWord++).matches("if") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("<");
-            while (currentWord < tokens.size()) {
-                switch (tokens.get(currentWord)) {
-                    case "if":
-                        currentWord = checkIf(tokens, currentWord);
-                        break;
-                    case "while":
-                        currentWord = checkWhile(tokens, currentWord);
-                        break;
-                    case "}":
-                        System.out.print(">");
-                        return ++currentWord;
-                    default:
-                        currentWord = checkInstruction(tokens, currentWord);
-                        break;
-                }
-            }
+            currentWord = checkNext(tokens,currentWord,">");
+            return currentWord;
         }
         throw new RuntimeException("Syntax Error");
     }
@@ -170,23 +141,9 @@ public class Translator {
         if (tokens.get(currentWord++).matches("while") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("(");
-            while (currentWord < tokens.size()) {
-                switch (tokens.get(currentWord)) {
-                    case "if":
-                        currentWord = checkIf(tokens, currentWord);
-                        break;
-                    case "while":
-                        currentWord = checkWhile(tokens, currentWord);
-                        break;
-                    case "}":
-                        System.out.print(")");
-                        return ++currentWord;
-                    default:
-                        currentWord = checkInstruction(tokens, currentWord);
-                        break;
-                }
+            currentWord = checkNext(tokens,currentWord,")");
+            return currentWord;
             }
-        }
         throw new RuntimeException("Syntax Error");
     }
 
@@ -201,5 +158,33 @@ public class Translator {
             System.out.print("-");
             return ++currentWord;
         } else throw new RuntimeException("Syntax Error");
+    }
+
+    /**
+     * Check next
+     * @param tokens        list of tokens to be translated
+     * @param currentWord   current token pointer in the list of tokens
+     * @param right         right symbol
+     * @return              next token pointer for further translation
+     */
+    private static int checkNext(ArrayList<String> tokens, int currentWord, String right)
+    {
+        while (currentWord < tokens.size()) {
+            switch (tokens.get(currentWord)) {
+                case "if":
+                    currentWord = checkIf(tokens, currentWord);
+                    break;
+                case "while":
+                    currentWord = checkWhile(tokens, currentWord);
+                    break;
+                case "}":
+                    System.out.print(right);
+                    return ++currentWord;
+                default:
+                    currentWord = checkInstruction(tokens, currentWord);
+                    break;
+            }
+        }
+        throw new RuntimeException("Syntax Error");
     }
 }
