@@ -16,11 +16,11 @@ import java.util.Arrays;
  * @version 1.0
  * @since 2021-08-30
  */
+@SuppressWarnings("StringConcatenationInLoop")
 public class Translator {
     /**
      * Reads a text file (path is the first command line argument) and translates the text into the symbolic notation
      * @param args  array of command line arguments
-     * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         if (args.length == 0)
@@ -34,7 +34,6 @@ public class Translator {
      * Reads the content of a text file into a string and returns it
      * @param path  location of the text file which is to be read
      * @return      content of the text file as a string
-     * @throws IOException
      */
     private static String readTextFile(String path) throws IOException {
         String fileText = ""; String lineText;
