@@ -109,10 +109,12 @@ public class Translator {
         if (tokens.get(currentWord++).matches("[A-za-z0-9]+") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("[");
-            currentWord = checkNext(tokens,currentWord,"]");
-            return currentWord;
-        }
-        throw new RuntimeException("Syntax Error");
+            currentWord = checkBody(tokens, currentWord);
+            if (tokens.get(currentWord).equals("}")) {
+                System.out.print("]");
+                return ++currentWord;
+            } else throw new RuntimeException("Syntax Error");
+        } else throw new RuntimeException("Syntax Error");
     }
 
     /**
@@ -125,10 +127,12 @@ public class Translator {
         if (tokens.get(currentWord++).matches("if") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("<");
-            currentWord = checkNext(tokens,currentWord,">");
-            return currentWord;
-        }
-        throw new RuntimeException("Syntax Error");
+            currentWord = checkBody(tokens, currentWord);
+            if (tokens.get(currentWord).equals("}")) {
+                System.out.print(">");
+                return ++currentWord;
+            } else throw new RuntimeException("Syntax Error");
+        } else throw new RuntimeException("Syntax Error");
     }
 
     /**
@@ -141,10 +145,12 @@ public class Translator {
         if (tokens.get(currentWord++).matches("while") && tokens.get(currentWord++).equals("(")
                 && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
             System.out.print("(");
-            currentWord = checkNext(tokens,currentWord,")");
-            return currentWord;
-            }
-        throw new RuntimeException("Syntax Error");
+            currentWord = checkBody(tokens, currentWord);
+            if (tokens.get(currentWord).equals("}")) {
+                System.out.print(")");
+                return ++currentWord;
+            } else throw new RuntimeException("Syntax Error");
+        } else throw new RuntimeException("Syntax Error");
     }
 
     /**
@@ -161,30 +167,26 @@ public class Translator {
     }
 
     /**
-     * Check next
+     * Syntactically validates a body (between the opening and closing braces)
      * @param tokens        list of tokens to be translated
      * @param currentWord   current token pointer in the list of tokens
-     * @param right         right symbol
      * @return              next token pointer for further translation
      */
-    private static int checkNext(ArrayList<String> tokens, int currentWord, String right)
-    {
-        while (currentWord < tokens.size()) {
-            switch (tokens.get(currentWord)) {
+    private static int checkBody(ArrayList<String> tokens, int currentWord) {
+        String token = "";
+        while ((currentWord < tokens.size()) && (!(token = tokens.get(currentWord)).equals("}"))) {
+            switch (token) {
                 case "if":
                     currentWord = checkIf(tokens, currentWord);
                     break;
                 case "while":
                     currentWord = checkWhile(tokens, currentWord);
                     break;
-                case "}":
-                    System.out.print(right);
-                    return ++currentWord;
                 default:
                     currentWord = checkInstruction(tokens, currentWord);
                     break;
             }
         }
-        throw new RuntimeException("Syntax Error");
+        return currentWord;
     }
 }
