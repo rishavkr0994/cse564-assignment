@@ -26,7 +26,7 @@ public class Translator {
         if (args.length == 0)
             throw new IllegalArgumentException("file path is not provided");
         String text = readTextFile(args[0]);
-        ArrayList<String> tokenList = splitWords(text);
+        ArrayList<Token> tokenList = splitWords(text);
         translate(tokenList);
     }
 
@@ -51,14 +51,14 @@ public class Translator {
      * @param text  text to be tokenized
      * @return      list of tokens
      */
-    private static ArrayList<String> splitWords(String text) {
-        ArrayList<String> wordList = new ArrayList<>();
+    private static ArrayList<Token> splitWords(String text) {
+        ArrayList<Token> tokenList = new ArrayList<>();
         String[] lineList = text.split("\n");
         for (String line: Arrays.stream(lineList).filter(x -> !x.isEmpty()).toList()) {
-            ArrayList<String> wordListForLine = splitLine(line);
-            wordList.addAll(wordListForLine);
+            ArrayList<Token> tokenListForLine = splitLine(line);
+            tokenList.addAll(tokenListForLine);
         }
-        return wordList;
+        return tokenList;
     }
 
     /**
@@ -66,23 +66,23 @@ public class Translator {
      * @param line  line of text to be tokenized
      * @return      list of tokens generated from tokenization
      */
-    private static ArrayList<String> splitLine(String line) {
-        ArrayList<String> tokenList = new ArrayList<>();
+    private static ArrayList<Token> splitLine(String line) {
+        ArrayList<Token> tokenList = new ArrayList<>();
         String currentToken = "";
         for (int index = 0; index < line.length(); index++) {
             char ch = line.charAt(index);
             if (Character.isLetterOrDigit(ch)) currentToken += ch;
             else if (ch == '(' || ch == ')' || ch == '{' || ch == '}') {
                 if (!currentToken.isEmpty()) {
-                    tokenList.add(currentToken);
+                    tokenList.add(new Token(currentToken));
                     currentToken = "";
                 }
-                tokenList.add(Character.toString(ch));
+                tokenList.add(new Token(Character.toString(ch)));
             }
         }
 
         if (!currentToken.isEmpty())
-            tokenList.add(currentToken);
+            tokenList.add(new Token(currentToken));
         return tokenList;
     }
 
@@ -91,7 +91,7 @@ public class Translator {
      * throws as RuntimeException in case of invalid syntax
      * @param tokens    list of tokens to be translated
      */
-    private static void translate(ArrayList<String> tokens) {
+    private static void translate(ArrayList<Token> tokens) {
         int currentToken = 0;
         while (currentToken < tokens.size()) {
             currentToken = checkMethod(tokens, currentToken);
@@ -105,12 +105,14 @@ public class Translator {
      * @param currentWord   current token pointer in the list of tokens
      * @return              next token pointer for further translation
      */
-    private static int checkMethod(ArrayList<String> tokens, int currentWord) {
-        if (tokens.get(currentWord++).matches("[A-za-z0-9]+") && tokens.get(currentWord++).equals("(")
-                && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
+    private static int checkMethod(ArrayList<Token> tokens, int currentWord) {
+        if (tokens.get(currentWord).getType() == Token.Type.WORD &&
+                tokens.get(++currentWord).getData().equals("(") &&
+                tokens.get(++currentWord).getData().equals(")") &&
+                tokens.get(++currentWord).getData().equals("{")) {
             System.out.print("[");
-            currentWord = checkBody(tokens, currentWord);
-            if (tokens.get(currentWord).equals("}")) {
+            currentWord = checkBody(tokens, ++currentWord);
+            if (tokens.get(currentWord).getData().equals("}")) {
                 System.out.print("]");
                 return ++currentWord;
             } else throw new RuntimeException("Syntax Error");
@@ -123,12 +125,14 @@ public class Translator {
      * @param currentWord   current token pointer in the list of tokens
      * @return              next token pointer for further translation
      */
-    private static int checkIf(ArrayList<String> tokens, int currentWord) {
-        if (tokens.get(currentWord++).matches("if") && tokens.get(currentWord++).equals("(")
-                && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
+    private static int checkIf(ArrayList<Token> tokens, int currentWord) {
+        if (tokens.get(currentWord).getType() == Token.Type.KEYWORD && tokens.get(currentWord).getData().equals("if") &&
+                tokens.get(++currentWord).getData().equals("(") &&
+                tokens.get(++currentWord).getData().equals(")") &&
+                tokens.get(++currentWord).getData().equals("{")) {
             System.out.print("<");
-            currentWord = checkBody(tokens, currentWord);
-            if (tokens.get(currentWord).equals("}")) {
+            currentWord = checkBody(tokens, ++currentWord);
+            if (tokens.get(currentWord).getData().equals("}")) {
                 System.out.print(">");
                 return ++currentWord;
             } else throw new RuntimeException("Syntax Error");
@@ -141,12 +145,14 @@ public class Translator {
      * @param currentWord   current token pointer in the list of tokens
      * @return              next token pointer for further translation
      */
-    private static int checkWhile(ArrayList<String> tokens , int currentWord) {
-        if (tokens.get(currentWord++).matches("while") && tokens.get(currentWord++).equals("(")
-                && tokens.get(currentWord++).equals(")") && tokens.get(currentWord++).equals("{")) {
+    private static int checkWhile(ArrayList<Token> tokens , int currentWord) {
+        if (tokens.get(currentWord).getType() == Token.Type.KEYWORD && tokens.get(currentWord).getData().equals("while") &&
+                tokens.get(++currentWord).getData().equals("(") &&
+                tokens.get(++currentWord).getData().equals(")") &&
+                tokens.get(++currentWord).getData().equals("{")) {
             System.out.print("(");
-            currentWord = checkBody(tokens, currentWord);
-            if (tokens.get(currentWord).equals("}")) {
+            currentWord = checkBody(tokens, ++currentWord);
+            if (tokens.get(currentWord).getData().equals("}")) {
                 System.out.print(")");
                 return ++currentWord;
             } else throw new RuntimeException("Syntax Error");
@@ -159,8 +165,8 @@ public class Translator {
      * @param currentWord   current token pointer in the list of tokens
      * @return              next token pointer for further translation
      */
-    private static int checkInstruction(ArrayList<String> tokens, int currentWord) {
-        if (tokens.get(currentWord).matches("[A-za-z0-9]+")) {
+    private static int checkInstruction(ArrayList<Token> tokens, int currentWord) {
+        if (tokens.get(currentWord).getType() == Token.Type.WORD) {
             System.out.print("-");
             return ++currentWord;
         } else throw new RuntimeException("Syntax Error");
@@ -172,19 +178,21 @@ public class Translator {
      * @param currentWord   current token pointer in the list of tokens
      * @return              next token pointer for further translation
      */
-    private static int checkBody(ArrayList<String> tokens, int currentWord) {
-        String token = "";
-        while ((currentWord < tokens.size()) && (!(token = tokens.get(currentWord)).equals("}"))) {
-            switch (token) {
-                case "if":
-                    currentWord = checkIf(tokens, currentWord);
+    private static int checkBody(ArrayList<Token> tokens, int currentWord) {
+        while (currentWord < tokens.size()) {
+            Token token = tokens.get(currentWord);
+            switch (token.getType()) {
+                case KEYWORD:
+                    if (token.getData().equals("if"))
+                        currentWord = checkIf(tokens, currentWord);
+                    else if (token.getData().equals("while"))
+                        currentWord = checkWhile(tokens, currentWord);
                     break;
-                case "while":
-                    currentWord = checkWhile(tokens, currentWord);
-                    break;
-                default:
+                case WORD:
                     currentWord = checkInstruction(tokens, currentWord);
                     break;
+                case DELIMITER:
+                    return currentWord;
             }
         }
         return currentWord;
