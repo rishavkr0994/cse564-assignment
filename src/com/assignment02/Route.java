@@ -1,10 +1,20 @@
 package com.assignment02;
 
 public class Route {
+    private City src;
+    private City dest;
+    private double dist;
+
+    public Route() { }
+    public Route(City src, City dest, double dist) {
+        this.src = src;
+        this.dest = dest;
+        this.dist = dist;
+    }
+
     public City getSrc() {
         return src;
     }
-
     public void setSrc(City src) {
         this.src = src;
     }
@@ -12,20 +22,14 @@ public class Route {
     public City getDest() {
         return dest;
     }
-
     public void setDest(City dest) {
         this.dest = dest;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDist() {
+        return dist;
     }
-
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setDist(double distance) {
+        this.dist = distance;
     }
-
-    private City src;
-    private City dest;
-    private double distance;
 }

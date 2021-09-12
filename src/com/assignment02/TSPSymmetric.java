@@ -1,55 +1,50 @@
 package com.assignment02;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.File;;
 import java.util.ArrayList;
 
 public class TSPSymmetric extends TSP {
-    private static ArrayList<City> listCity = new ArrayList<>();
+    private static final String DATA_SECTION_START_TAG = "NODE_COORD_SECTION";
+    private static final String DATA_SECTION_END_TAG = "EOF";
     
     @Override
-    public void readFile(String path) throws IOException {
-        String lineText = null;
-        File file = new File(path);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        while ((lineText = br.readLine()) != null)
-        {
-           if (lineText.equals("NODE_COORD_SECTION"))
-           {
-               lineText = br.readLine();
-               while (!lineText.equals("EOF")) {
-                   String[] text = lineText.split(" ");
-                   City city = new City();
-                   city.setNum(Integer.parseInt(text[0]));
-                   city.setX(Double.valueOf(text[1]));
-                   city.setY(Double.valueOf(text[2]));
-                   listCity.add(city);
-                   lineText = br.readLine();
-               }
-           }
+    public void parseTextFile(File file) throws Exception {
+        String fileText = readTextFile(file);
+        String[] lineList = fileText.split("\n");
+
+        int lineIdx = 0;
+        while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_START_TAG))
+            lineIdx++;
+        lineIdx++;
+
+        while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_END_TAG)) {
+            String[] tokens = lineList[lineIdx].split(" ");
+            City city = new City();
+            city.setNum(Integer.parseInt(tokens[0]));
+            city.setX(Double.valueOf(tokens[1]));
+            city.setY(Double.valueOf(tokens[2]));
+            cityList.add(city);
+            lineIdx++;
         }
     }
+
     @Override
     public ArrayList<Route> calculateShortestPath() {
         ArrayList<Route> result = new ArrayList<>();
-        for (int i = 0; i < listCity.size(); i++) {
-            City city = listCity.get(i);
+        for (int i = 0; i < cityList.size(); i++) {
+            City city = cityList.get(i);
             double x1 = city.getX();
             double y1 = city.getY();
             Route route = new Route();
             route.setSrc(city);
-            if (listCity.size() == i + 1)
-            {
-                city = listCity.get(0);
-            }else
-                city = listCity.get(++i);
+            if (cityList.size() == i + 1)
+                city = cityList.get(0);
+            else city = cityList.get(++i);
             double x2 = city.getX();
             double y2 = city.getY();
             route.setDest(city);
             double distance = Math.sqrt((x1 + x2) * Math.abs(x2 - x1) + (y1 + y2) * Math.abs(y2-y1));
-            route.setDistance(distance);
+            route.setDist(distance);
             result.add(route);
         }
         return result;
