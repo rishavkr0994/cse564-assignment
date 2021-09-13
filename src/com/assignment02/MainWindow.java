@@ -62,6 +62,9 @@ public class MainWindow extends JFrame {
                     showMessageDialog("Route is plotted successfully !");
                 } catch (Exception exception) {
                     showMessageDialog("Failed to generate plot !");
+                } catch (OutOfMemoryError error) {
+                    showMessageDialog("Failed to generate plot: Out of memory !");
+                    plotRoute(null, null);
                 }
             }
         };
@@ -113,6 +116,9 @@ public class MainWindow extends JFrame {
                     showMessageDialog("Route is plotted successfully !");
                 } catch (Exception exception) {
                     showMessageDialog("Failed to generate plot !");
+                } catch (OutOfMemoryError error) {
+                    showMessageDialog("Failed to generate plot: Out of memory !");
+                    plotRoute(null, null);
                 }
             }
         });
