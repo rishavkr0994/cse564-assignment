@@ -19,19 +19,15 @@ public class TSPAsymmetric extends TSP {
 
         while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_END_TAG)) {
             String[] tokens = lineList[lineIdx].split(" ");
-
-//             City city = new City();
-//             city.setNum(Integer.parseInt(tokens[0]));
-//             city.setX(Double.valueOf(tokens[1]));
-//             city.setY(Double.valueOf(tokens[2]));
-//             cityList.add(city);
+            // City city = new City();
+            // city.setNum(Integer.parseInt(tokens[0]));
+            // city.setX(Double.valueOf(tokens[1]));
+            // city.setY(Double.valueOf(tokens[2]));
+            // cityList.add(city);
             lineIdx++;
         }
         throw new Exception("Not Implemented");
     }
-
-    @Override
-    public ArrayList<Route> calculateDummyRoute() { return null; }
 
     @Override
     public ArrayList<Route> calculateShortestPath() {

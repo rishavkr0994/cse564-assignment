@@ -1,6 +1,6 @@
 package com.assignment02;
 
-import java.io.File;;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -28,8 +28,8 @@ public class TSPSymmetric extends TSP {
             String[] tokens = lineList[lineIdx].split(" ");
             City city = new City();
             city.setNum(Integer.parseInt(tokens[0]));
-            city.setX(Double.valueOf(tokens[1]));
-            city.setY(Double.valueOf(tokens[2]));
+            city.setX(Double.parseDouble(tokens[1]));
+            city.setY(Double.parseDouble(tokens[2]));
             cityList.add(city);
             lineIdx++;
         }

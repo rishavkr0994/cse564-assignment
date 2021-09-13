@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class TSP {
-    protected ArrayList<City> cityList = new ArrayList<City>();
+    protected ArrayList<City> cityList = new ArrayList<>();
 
     protected String readTextFile(File file) throws IOException {
-        String lineText = null;
+        String lineText;
         StringBuilder fileTextStringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new FileReader(file));
         while ((lineText = br.readLine()) != null) {
