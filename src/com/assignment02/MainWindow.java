@@ -2,7 +2,6 @@ package com.assignment02;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Description Text
+ * This program implements a GUI to display the travel route between a group of cities. It supports input of both
+ * symmetric and asymmetric data and allows selection between a dummy route (by connecting the cities in order) and the
+ * shortest route (greedy algorithm for travelling salesman problem). It also displays the total circuit distance for
+ * the input based on the selected route type
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -32,7 +34,7 @@ public class MainWindow extends JFrame {
     private TSP tsp = null;
 
     /**
-     * Description Text
+     * Default constructor. Initializes the GUI components and their defines their responses to user actions
      */
     public MainWindow() {
         super("Travelling Salesman Path Plotting Tool");
@@ -139,8 +141,10 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Description Text
-     * @param args
+     * Starting point for the program. It creates and instance of the GUI, configures its physical attributes and
+     * displays it on screen
+     *
+     * @param args command line arguments
      */
     public static void main(String[] args) {
         MainWindow mainWindow = new MainWindow();

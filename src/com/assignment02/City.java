@@ -1,7 +1,7 @@
 package com.assignment02;
 
 /**
- * Description Text
+ * This class is the data structure for storing information about a city i.e. the city number and its x, y co-ordinates
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -13,57 +13,59 @@ public class City {
     private double y;
 
     /**
-     * Description Text
-     * @return
+     * Get the city number
+     * @return city number
      */
     public int getNum() {
-        return num;
+        return num ;
     }
 
     /**
-     * Description Text
-     * @param num
+     * Set the city number
+     * @param num city number
      */
     public void setNum(int num) {
         this.num = num;
     }
 
     /**
-     * Description Text
-     * @return
+     * Get the x co-ordinate of the city
+     * @return x co-ordinate of the city
      */
     public double getX() {
         return x;
     }
 
     /**
-     * Description Text
-     * @param x
+     * Set the x co-ordinate of the city
+     * @param x x co-ordinate of the city
      */
     public void setX(double x) {
         this.x = x;
     }
 
     /**
-     * Description Text
-     * @return
+     * Get the y co-ordinate of the city
+     * @return y co-ordinate of the city
      */
     public double getY() {
         return y;
     }
 
     /**
-     * Description Text
-     * @param y
+     * Set the y co-ordinate of the city
+     * @param y y co-ordinate of the city
      */
     public void setY(double y) {
         this.y = y;
     }
 
     /**
-     * Description Text
-     * @param obj
-     * @return
+     * Compares the current object with another object for value equality and returns true only when <code>obj</code>
+     * object is of type City and has the same x and y co-ordinates.
+     *
+     * @param obj object to be compared
+     * @return boolean value indicating whether <code>obj</code> value equals the current object
      */
     @Override
     public boolean equals(Object obj) {

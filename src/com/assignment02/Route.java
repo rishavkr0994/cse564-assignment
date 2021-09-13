@@ -1,7 +1,8 @@
 package com.assignment02;
 
 /**
- * Description Text
+ * This class is the data structure for route information between two cities i.e. the source, destination cities and
+ * the distance between them
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -13,48 +14,48 @@ public class Route {
     private double dist;
 
     /**
-     * Description Text
-     * @return
+     * Get the source city
+     * @return source city
      */
     public City getSrc() {
         return src;
     }
 
     /**
-     * Description Text
-     * @param src
+     * Set the source city
+     * @param src source city
      */
     public void setSrc(City src) {
         this.src = src;
     }
 
     /**
-     * Description Text
-     * @return
+     * Get the destination city
+     * @return destination city
      */
     public City getDest() {
         return dest;
     }
 
     /**
-     * Description Text
-     * @param dest
+     * Set the destination city
+     * @param dest destination city
      */
     public void setDest(City dest) {
         this.dest = dest;
     }
 
     /**
-     * Description Text
-     * @return
+     * Get the route distance
+     * @return route distance
      */
     public double getDist() {
         return dist;
     }
 
     /**
-     * Description Text
-     * @param distance
+     * Set the route distance
+     * @param distance route distance
      */
     public void setDist(double distance) {
         this.dist = distance;
