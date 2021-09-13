@@ -9,10 +9,11 @@ import java.util.ArrayList;
 public class TSPSymmetric extends TSP {
     private static final String DATA_SECTION_START_TAG = "NODE_COORD_SECTION";
     private static final String DATA_SECTION_END_TAG = "EOF";
-    private static double[][] distanceMatrix;
-    private static int cityNum;
-    private static int[] colFlag;
-    private static int[] rowFlag;
+
+    private double[][] distanceMatrix;
+    private int cityNum;
+    private int[] colFlag;
+    private int[] rowFlag;
 
     @Override
     public void parseTextFile(File file) throws Exception {
@@ -39,28 +40,19 @@ public class TSPSymmetric extends TSP {
     public ArrayList<Route> calculateDummyRoute() {
         ArrayList<Route> result = new ArrayList<>();
         for (int i = 0; i < cityList.size(); i++) {
-            City city = cityList.get(i);
-            double x1 = city.getX();
-            double y1 = city.getY();
-            Route route = new Route();
-            route.setSrc(city);
-            if (i == cityList.size() - 1)
-                city = cityList.get(0);
-            else city = cityList.get(i + 1);
-            double x2 = city.getX();
-            double y2 = city.getY();
-            route.setDest(city);
-            double distance = Math.sqrt((x1 + x2) * Math.abs(x2 - x1) + (y1 + y2) * Math.abs(y2-y1));
-            route.setDist(distance);
+            City src = cityList.get(i);
+            City dest = cityList.get(i == cityList.size() - 1 ? 0 : i + 1);
+            double distance = getEuclideanDistance(src, dest);
+            Route route = new Route(src, dest, distance);
             result.add(route);
         }
         return result;
     }
 
     @Override
-    public ArrayList<Route> calculateShortestPath() {
+    public ArrayList<Route> calculateShortestRoute() {
         initDistanceMatrix();
-        ArrayList<Route> shortestPath = new ArrayList<>();
+        ArrayList<Route> result = new ArrayList<>();
         double[] distance = new double[cityNum];
         int i = 0, j = 0;
         while(rowFlag[i] == 1)
@@ -72,10 +64,10 @@ public class TSPSymmetric extends TSP {
             j = selectMin(distance);
             rowFlag[i] = 0;//row set 0，already pass
             colFlag[j] = 0;//col set 0，already pass
-            shortestPath.add(new Route(cityList.get(i), cityList.get(j), distanceMatrix[i][j]));
+            result.add(new Route(cityList.get(i), cityList.get(j), distanceMatrix[i][j]));
             i = j;//current point pointer to next pointer
         }
-        return shortestPath;
+        return result;
     }
 
     private void initDistanceMatrix() {
@@ -136,5 +128,10 @@ public class TSPSymmetric extends TSP {
             }
         }
         return k;
+    }
+
+    private double getEuclideanDistance(City src, City dest) {
+        double x1 = src.getX(), y1 = src.getY(), x2 = dest.getX(), y2 = dest.getY();
+        return Math.sqrt((x1 + x2) * Math.abs(x2 - x1) + (y1 + y2) * Math.abs(y2-y1));
     }
 }

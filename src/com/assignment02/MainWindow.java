@@ -2,10 +2,14 @@ package com.assignment02;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Some Text Here
@@ -18,7 +22,7 @@ public class MainWindow extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
-    private Canva canva;
+    private final Canva canva;
 
     public MainWindow() {
         super("Travelling Salesman Path Plotting Tool");
@@ -40,17 +44,14 @@ public class MainWindow extends JFrame {
         constraints.gridx = 0; constraints.gridy = 1; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,10,10,2);
         add(loadDataButton, constraints);
-        loadDataButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                File selectedFile = displayFileSelectionDialog();
-                if (selectedFile != null) {
-                    try {
-                        generatePlot(selectedFile);
-                        showMessageDialog("Route is plotted successfully !");
-                    } catch (Exception exception) {
-                        showMessageDialog("Failed to generate plot from selected file");
-                    }
+        loadDataButton.addActionListener(e -> {
+            File selectedFile = displayFileSelectionDialog();
+            if (selectedFile != null) {
+                try {
+                    generatePlot(selectedFile);
+                    showMessageDialog("Route is plotted successfully !");
+                } catch (Exception exception) {
+                    showMessageDialog("Failed to generate plot from selected file");
                 }
             }
         });
@@ -63,13 +64,10 @@ public class MainWindow extends JFrame {
         constraints.gridx = 1; constraints.gridy = 1; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,2,10,10);
         add(clearDataButton, constraints);
-        clearDataButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { plotRoute(null,null); }
-        });
+        clearDataButton.addActionListener(e -> plotRoute(null,null));
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         MainWindow mainWindow = new MainWindow();
         mainWindow.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         mainWindow.setLocationRelativeTo(null);
@@ -80,25 +78,26 @@ public class MainWindow extends JFrame {
     private void generatePlot(File file) throws Exception {
         TSP tsp = null;
 
-        /* Logic To Judge File Type Based On Content */
-        String lineText = null;
+        String lineText;
         BufferedReader br = new BufferedReader(new FileReader(file));
         while ((lineText = br.readLine()) != null) {
-            if (lineText.equals("TYPE : TSP")) {
-                tsp = new TSPSymmetric();
-                break;
-            } else if (lineText.equals("TYPE: ATSP")) {
-                tsp = new TSPAsymmetric();
+            List<String> tokens = Arrays.stream(lineText.split(":"))
+                                        .map(String::trim).collect(Collectors.toList());
+
+            if (tokens.size() == 2 && tokens.get(0).equals("TYPE")) {
+                if (tokens.get(1).equals("TSP"))
+                    tsp = new TSPSymmetric();
+                else if (tokens.get(1).equals("ATSP"))
+                    tsp = new TSPAsymmetric();
                 break;
             }
         }
 
         if (tsp == null)
             throw new IOException("Invalid File");
-        /* Logic To Judge File Type Based On Content */
 
         tsp.parseTextFile(file);
-        ArrayList<Route> routeList = tsp.calculateShortestPath();
+        ArrayList<Route> routeList = tsp.calculateShortestRoute();
         plotRoute(tsp.getCityList(), routeList);
     }
 

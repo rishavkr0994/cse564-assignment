@@ -5,13 +5,6 @@ public class City {
     private double x;
     private double y;
 
-    public City() { }
-    public City(int num, double x, double y) {
-        this.num = num;
-        this.x = x;
-        this.y = y;
-    }
-
     public int getNum() {
         return num;
     }
