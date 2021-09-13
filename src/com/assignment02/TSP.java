@@ -20,6 +20,7 @@ public abstract class TSP {
     }
 
     public abstract void parseTextFile(File file) throws Exception;
+    public abstract ArrayList<Route> calculateDummyRoute();
     public abstract ArrayList<Route> calculateShortestPath();
 
     public ArrayList<City> getCityList() { return cityList; }
