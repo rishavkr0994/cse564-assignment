@@ -21,6 +21,11 @@ public class TSPAsymmetric extends TSP {
 
     private ArrayList<Route> routeList = new ArrayList<>();
 
+    private int cityNum;
+    private double[][] distanceMatrix;
+    private int[] colFlag;
+    private int[] rowFlag;
+
     /**
      * Description Text
      * @param file
@@ -84,7 +89,62 @@ public class TSPAsymmetric extends TSP {
      * @return
      */
     @Override
-    public ArrayList<Route> calculateShortestRoute() { return null; }
+    public ArrayList<Route> calculateShortestRoute() {
+        initDistanceMatrix();
+        ArrayList<Route> result = new ArrayList<>();
+
+        int i = 0;
+        while (rowFlag[i] == 1) {
+            int j = getNearestCityIndex(distanceMatrix[i]);
+            if (j == -1) j = 0;
+
+            rowFlag[i] = 0; colFlag[j] = 0;
+
+            Route route = new Route();
+            route.setSrc(cityList.get(i));
+            route.setDest(cityList.get(j));
+            route.setDist(distanceMatrix[i][j]);
+            result.add(route);
+
+            i = j;
+        }
+        return result;
+    }
+
+    private void initDistanceMatrix() {
+        cityNum = cityList.size();
+
+        distanceMatrix = new double[cityNum][cityNum];
+        for (int i = 0; i < cityNum; i++) {
+            for (int j = 0; j < cityNum; j++) {
+                if (i != j)
+                    distanceMatrix[i][j] = routeList.get(i * cityNum + j).getDist();
+                else distanceMatrix[i][j] = 0;
+            }
+        }
+
+        colFlag = new int[cityNum];
+        colFlag[0] = 0;
+        for (int i = 1; i < cityNum; i++)
+            colFlag[i] = 1;
+
+        rowFlag = new int[cityNum];
+        for (int i = 0; i < cityNum; i++)
+            rowFlag[i] = 1;
+    }
+
+    private int getNearestCityIndex(double[] distance) {
+        int nearestCityIndex = -1; double minDistance = 0;
+        for (int j = 0; j < cityNum; j++) {
+            if (colFlag[j] == 1) {
+                if (nearestCityIndex == -1 || minDistance >= distance[j]) {
+                    minDistance = distance[j];
+                    nearestCityIndex = j;
+                }
+            }
+        }
+        return nearestCityIndex;
+    }
 
     private ArrayList<City> generateRandomCityList(int count) {
         ArrayList<City> randomCityList = new ArrayList<>();
