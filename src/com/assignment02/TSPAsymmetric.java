@@ -20,7 +20,7 @@ public class TSPAsymmetric extends TSP {
     private static final String DATA_SECTION_START_TAG = "EDGE_WEIGHT_SECTION";
     private static final String DATA_SECTION_END_TAG = "EOF";
 
-    private ArrayList<Route> routeList = new ArrayList<>();
+    private final ArrayList<Route> routeList = new ArrayList<>();
 
     private int cityNum;
     private double[][] distanceMatrix;
@@ -52,19 +52,20 @@ public class TSPAsymmetric extends TSP {
 
         int srcCityIdx = 0; int destCityIdx = 0;
         while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_END_TAG)) {
-            String[] distanceList = lineList[lineIdx].trim().split("\\s+");
+            if (!lineList[lineIdx].isBlank()) {
+                String[] distanceList = lineList[lineIdx].trim().split("\\s+");
+                for (int i = 0; i < distanceList.length; i++) {
+                    int distance = Integer.parseInt(distanceList[i]);
+                    Route route = new Route();
+                    route.setSrc(cityList.get(srcCityIdx));
+                    route.setDest(cityList.get(destCityIdx));
+                    route.setDist(distance);
+                    routeList.add(route);
 
-            for (int i = 0; i < distanceList.length; i++) {
-                int distance = Integer.parseInt(distanceList[i]);
-                Route route = new Route();
-                route.setSrc(cityList.get(srcCityIdx));
-                route.setDest(cityList.get(destCityIdx++));
-                route.setDist(distance);
-                routeList.add(route);
-            }
-
-            if (destCityIdx == cityCount) {
-                srcCityIdx++; destCityIdx = 0;
+                    if (destCityIdx == (cityCount - 1)) {
+                        destCityIdx = 0; srcCityIdx++;
+                    } else destCityIdx++;
+                }
             }
             lineIdx++;
         }
