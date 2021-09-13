@@ -2,6 +2,8 @@ package com.assignment02;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -22,8 +24,12 @@ public class MainWindow extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
-    private final Canva canva;
     private final JLabel distanceValueLabel;
+    private final JRadioButton dummyRouteRadioButton, shortestRouteRadioButton;
+
+    private final Canva canva;
+
+    private TSP tsp = null;
 
     public MainWindow() {
         super("Travelling Salesman Path Plotting Tool");
@@ -35,16 +41,55 @@ public class MainWindow extends JFrame {
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 0.0; constraints.weighty = 0.0;
         constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
-        constraints.insets = new Insets(10,10,5,10);
+        constraints.insets = new Insets(5,10,0,10);
         add(distanceHeaderLabel, constraints);
 
         distanceValueLabel = new JLabel();
-        distanceValueLabel.setText("0.0 Units");
+        distanceValueLabel.setText("0.00 Units");
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 0.0; constraints.weighty = 0.0;
         constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
-        constraints.insets = new Insets(10,100,5,10);
+        constraints.insets = new Insets(5,100,0,10);
         add(distanceValueLabel, constraints);
+
+        ActionListener routeRadioButtonActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (tsp != null) {
+                    try {
+                        refreshPlot();
+                        showMessageDialog("Route is plotted successfully !");
+                    } catch (Exception exception) {
+                        showMessageDialog("Failed to generate plot !");
+                    }
+                }
+            }
+        };
+
+        dummyRouteRadioButton = new JRadioButton("Dummy Route");
+        dummyRouteRadioButton.setFocusPainted(false);
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.weightx = 0.0; constraints.weighty = 0.0;
+        constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
+        constraints.insets = new Insets(5,0,0,230);
+        dummyRouteRadioButton.addActionListener(routeRadioButtonActionListener);
+        add(dummyRouteRadioButton, constraints);
+
+        shortestRouteRadioButton = new JRadioButton("Shortest Route (Greedy Algorithm)");
+        shortestRouteRadioButton.setFocusPainted(false);
+        shortestRouteRadioButton.setSelected(true);
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.weightx = 0.0; constraints.weighty = 0.0;
+        constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
+        constraints.insets = new Insets(5,0,0,10);
+        shortestRouteRadioButton.addActionListener(routeRadioButtonActionListener);
+        add(shortestRouteRadioButton, constraints);
+
+        ButtonGroup routeTypeButtonGroup = new ButtonGroup();
+        routeTypeButtonGroup.add(shortestRouteRadioButton);
+        routeTypeButtonGroup.add(dummyRouteRadioButton);
 
         canva = new Canva();
         constraints.fill = GridBagConstraints.BOTH;
@@ -60,7 +105,6 @@ public class MainWindow extends JFrame {
         constraints.weightx = 0.5; constraints.weighty = 0.0;
         constraints.gridx = 0; constraints.gridy = 2; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,10,10,2);
-        add(loadDataButton, constraints);
         loadDataButton.addActionListener(e -> {
             File selectedFile = displayFileSelectionDialog();
             if (selectedFile != null) {
@@ -68,10 +112,11 @@ public class MainWindow extends JFrame {
                     generatePlot(selectedFile);
                     showMessageDialog("Route is plotted successfully !");
                 } catch (Exception exception) {
-                    showMessageDialog("Failed to generate plot from selected file");
+                    showMessageDialog("Failed to generate plot !");
                 }
             }
         });
+        add(loadDataButton, constraints);
 
         JButton clearDataButton = new JButton("Clear Data");
         clearDataButton.setFocusPainted(false);
@@ -80,8 +125,11 @@ public class MainWindow extends JFrame {
         constraints.weightx = 0.5; constraints.weighty = 0.0;
         constraints.gridx = 1; constraints.gridy = 2; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,2,10,10);
+        clearDataButton.addActionListener(e -> {
+            tsp = null;
+            plotRoute(null, null);
+        });
         add(clearDataButton, constraints);
-        clearDataButton.addActionListener(e -> plotRoute(null,null));
     }
 
     public static void main(String[] args) {
@@ -93,8 +141,6 @@ public class MainWindow extends JFrame {
     }
 
     private void generatePlot(File file) throws Exception {
-        TSP tsp = null;
-
         String lineText;
         BufferedReader br = new BufferedReader(new FileReader(file));
         while ((lineText = br.readLine()) != null) {
@@ -114,7 +160,18 @@ public class MainWindow extends JFrame {
             throw new IOException("Invalid File");
 
         tsp.parseTextFile(file);
-        ArrayList<Route> routeList = tsp.calculateShortestRoute();
+        ArrayList<Route> routeList;
+        if (shortestRouteRadioButton.isSelected())
+            routeList = tsp.calculateShortestRoute();
+        else routeList = tsp.calculateDummyRoute();
+        plotRoute(tsp.getCityList(), routeList);
+    }
+
+    private void refreshPlot() {
+        ArrayList<Route> routeList;
+        if (shortestRouteRadioButton.isSelected())
+            routeList = tsp.calculateShortestRoute();
+        else routeList = tsp.calculateDummyRoute();
         plotRoute(tsp.getCityList(), routeList);
     }
 
@@ -127,7 +184,7 @@ public class MainWindow extends JFrame {
             for (Route route : routeList)
                 totalDistance += route.getDist();
         }
-        distanceValueLabel.setText(String.format("%f Units",  totalDistance));
+        distanceValueLabel.setText(String.format("%.2f Units",  totalDistance));
     }
 
     private File displayFileSelectionDialog() {

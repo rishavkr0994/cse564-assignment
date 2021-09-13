@@ -38,7 +38,11 @@ public class TSPAsymmetric extends TSP {
 
             for (int i = 0; i < distanceList.length; i++) {
                 int distance = Integer.parseInt(distanceList[i]);
-                routeList.add(new Route(cityList.get(srcCityIdx), cityList.get(destCityIdx++), distance));
+                Route route = new Route();
+                route.setSrc(cityList.get(srcCityIdx));
+                route.setDest(cityList.get(destCityIdx++));
+                route.setDist(distance);
+                routeList.add(route);
             }
 
             if (destCityIdx == cityCount) {

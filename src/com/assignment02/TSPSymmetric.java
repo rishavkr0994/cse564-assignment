@@ -3,15 +3,12 @@ package com.assignment02;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * https://blog.csdn.net/wangqiuyun/article/details/38680151
- */
 public class TSPSymmetric extends TSP {
     private static final String DATA_SECTION_START_TAG = "NODE_COORD_SECTION";
     private static final String DATA_SECTION_END_TAG = "EOF";
 
-    private double[][] distanceMatrix;
     private int cityNum;
+    private double[][] distanceMatrix;
     private int[] colFlag;
     private int[] rowFlag;
 
@@ -41,97 +38,85 @@ public class TSPSymmetric extends TSP {
         ArrayList<Route> result = new ArrayList<>();
         for (int i = 0; i < cityList.size(); i++) {
             City src = cityList.get(i);
-            City dest = cityList.get(i == cityList.size() - 1 ? 0 : i + 1);
+            City dest = null;
+            if (i == cityList.size() - 1)
+                dest = cityList.get(0);
+            else dest = cityList.get(i + 1);
+
             double distance = getEuclideanDistance(src, dest);
-            Route route = new Route(src, dest, distance);
+            Route route = new Route();
+            route.setSrc(src);
+            route.setDest(dest);
+            route.setDist(distance);
             result.add(route);
         }
         return result;
     }
 
+    /**
+     * Algorithm Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
+     * @return
+     */
     @Override
     public ArrayList<Route> calculateShortestRoute() {
         initDistanceMatrix();
         ArrayList<Route> result = new ArrayList<>();
-        double[] distance = new double[cityNum];
-        int i = 0, j = 0;
-        while(rowFlag[i] == 1)
-        {
-            for (int k = 0; k < cityNum; k++)
-            {
-                distance[k] = distanceMatrix[i][k];
-            }
-            j = selectMin(distance);
-            rowFlag[i] = 0;//row set 0，already pass
-            colFlag[j] = 0;//col set 0，already pass
-            result.add(new Route(cityList.get(i), cityList.get(j), distanceMatrix[i][j]));
-            i = j;//current point pointer to next pointer
+
+        int i = 0;
+        while (rowFlag[i] == 1) {
+            int j = getNearestCityIndex(distanceMatrix[i]);
+            if (j == -1) j = 0;
+
+            rowFlag[i] = 0; colFlag[j] = 0;
+
+            Route route = new Route();
+            route.setSrc(cityList.get(i));
+            route.setDest(cityList.get(j));
+            route.setDist(distanceMatrix[i][j]);
+            result.add(route);
+
+            i = j;
         }
         return result;
     }
 
     private void initDistanceMatrix() {
         cityNum = cityList.size();
+
         distanceMatrix = new double[cityNum][cityNum];
-        double[] x = new double[cityNum];
-        double[] y = new double[cityNum];
-        for (int i = 0; i < cityNum; i++)
-        {
-            City city = cityList.get(i);
-            x[i] = city.getX();
-            y[i] = city.getY();
-        }
-        for (int i = 0; i < cityNum - 1; i++)
-        {
-            distanceMatrix[i][i] = 0; //city1 to city1
-            for (int j = i + 1; j < cityNum; j++)
-            {
-                double ds = Math.sqrt((x[i] + x[j]) * Math.abs(x[i] - x[j]) + (y[i] + y[j]) * Math.abs(y[i] -y[j]));
-                distanceMatrix[i][j] = distanceMatrix[j][i] = ds;
+        for (int i = 0; i < cityNum; i++) {
+            distanceMatrix[i][i] = 0;
+            for (int j = i + 1; j < cityNum; j++) {
+                double distance = getEuclideanDistance(cityList.get(i), cityList.get(j));
+                distanceMatrix[i][j] = distanceMatrix[j][i] = distance;
             }
         }
-        distanceMatrix[cityNum - 1][cityNum - 1] = 0; //?
+
         colFlag = new int[cityNum];
-        colFlag[0] = 0;// first point?
+        colFlag[0] = 0;
         for (int i = 1; i < cityNum; i++)
-        {
-            colFlag[i] = 1; //init, not pass
-        }
+            colFlag[i] = 1;
+
         rowFlag = new int[cityNum];
         for (int i = 0; i < cityNum; i++)
-        {
-            rowFlag[i] = 1; //init, not pass
-        }
+            rowFlag[i] = 1;
     }
 
-    private int selectMin(double[] distance) // p is every distance
-    {
-        int j = 0;
-        double m = distance[0]; //from 0
-        int k = 0; //store the next city and return
-        while (colFlag[j] == 0) { // start from point no pass
-            j++;
-            if(j>=cityNum){
-                m = distance[0];
-                break;
-            }
-            else{
-                m = distance[j];
-            }
-        }
-        for (; j < cityNum; j++) { //scan j, find short path
+    private int getNearestCityIndex(double[] distance) {
+        int nearestCityIndex = -1; double minDistance = 0;
+        for (int j = 0; j < cityNum; j++) {
             if (colFlag[j] == 1) {
-                if (m >= distance[j]) {
-                    m = distance[j];
-                    k = j;
+                if (nearestCityIndex == -1 || minDistance >= distance[j]) {
+                    minDistance = distance[j];
+                    nearestCityIndex = j;
                 }
             }
         }
-        return k;
+        return nearestCityIndex;
     }
 
     private double getEuclideanDistance(City src, City dest) {
         double x1 = src.getX(), y1 = src.getY(), x2 = dest.getX(), y2 = dest.getY();
-        return Math.sqrt((x1 + x2) * Math.abs(x2 - x1) + (y1 + y2) * Math.abs(y2-y1));
+        return Math.sqrt((x1 + x2) * Math.abs(x1 - x2) + (y1 + y2) * Math.abs(y1 - y2));
     }
 }

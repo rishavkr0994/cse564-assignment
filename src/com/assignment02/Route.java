@@ -5,13 +5,6 @@ public class Route {
     private City dest;
     private double dist;
 
-    public Route() { }
-    public Route(City src, City dest, double dist) {
-        this.src = src;
-        this.dest = dest;
-        this.dist = dist;
-    }
-
     public City getSrc() {
         return src;
     }
