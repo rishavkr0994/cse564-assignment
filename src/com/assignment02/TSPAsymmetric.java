@@ -32,14 +32,19 @@ public class TSPAsymmetric extends TSP {
 
         cityList = generateRandomCityList(cityCount);
 
-        int srcCityIdx = 0;
+        int srcCityIdx = 0; int destCityIdx = 0;
         while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_END_TAG)) {
             String[] distanceList = lineList[lineIdx].trim().split("\\s+");
-            for (int destCityIdx = 0; destCityIdx < distanceList.length; destCityIdx++) {
-                int distance = Integer.parseInt(distanceList[destCityIdx]);
-                routeList.add(new Route(cityList.get(srcCityIdx), cityList.get(destCityIdx), distance));
+
+            for (int i = 0; i < distanceList.length; i++) {
+                int distance = Integer.parseInt(distanceList[i]);
+                routeList.add(new Route(cityList.get(srcCityIdx), cityList.get(destCityIdx++), distance));
             }
-            lineIdx++; srcCityIdx++;
+
+            if (destCityIdx == cityCount) {
+                srcCityIdx++; destCityIdx = 0;
+            }
+            lineIdx++;
         }
     }
 
