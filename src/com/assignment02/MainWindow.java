@@ -23,17 +23,34 @@ public class MainWindow extends JFrame {
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
     private final Canva canva;
+    private final JLabel distanceValueLabel;
 
     public MainWindow() {
         super("Travelling Salesman Path Plotting Tool");
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
+        JLabel distanceHeaderLabel = new JLabel();
+        distanceHeaderLabel.setText("Total Distance:");
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0.0; constraints.weighty = 0.0;
+        constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
+        constraints.insets = new Insets(10,10,5,10);
+        add(distanceHeaderLabel, constraints);
+
+        distanceValueLabel = new JLabel();
+        distanceValueLabel.setText("0.0 Units");
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 0.0; constraints.weighty = 0.0;
+        constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
+        constraints.insets = new Insets(10,100,5,10);
+        add(distanceValueLabel, constraints);
+
         canva = new Canva();
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1.0; constraints.weighty = 1.0;
-        constraints.gridx = 0; constraints.gridy = 0; constraints.gridwidth = 2;
-        constraints.insets = new Insets(10,10,5,10);
+        constraints.gridx = 0; constraints.gridy = 1; constraints.gridwidth = 2;
+        constraints.insets = new Insets(5,10,5,10);
         add(canva, constraints);
 
         JButton loadDataButton = new JButton("Load Data");
@@ -41,7 +58,7 @@ public class MainWindow extends JFrame {
         loadDataButton.setPreferredSize(new Dimension(0, 30));
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 0.5; constraints.weighty = 0.0;
-        constraints.gridx = 0; constraints.gridy = 1; constraints.gridwidth = 1;
+        constraints.gridx = 0; constraints.gridy = 2; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,10,10,2);
         add(loadDataButton, constraints);
         loadDataButton.addActionListener(e -> {
@@ -61,7 +78,7 @@ public class MainWindow extends JFrame {
         clearDataButton.setPreferredSize(new Dimension(0, 30));
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 0.5; constraints.weighty = 0.0;
-        constraints.gridx = 1; constraints.gridy = 1; constraints.gridwidth = 1;
+        constraints.gridx = 1; constraints.gridy = 2; constraints.gridwidth = 1;
         constraints.insets = new Insets(0,2,10,10);
         add(clearDataButton, constraints);
         clearDataButton.addActionListener(e -> plotRoute(null,null));
@@ -104,6 +121,13 @@ public class MainWindow extends JFrame {
     private void plotRoute(ArrayList<City> cityList, ArrayList<Route> routeList) {
         canva.setCityList(cityList);
         canva.setRouteList(routeList);
+
+        double totalDistance = 0.0;
+        if (routeList != null) {
+            for (Route route : routeList)
+                totalDistance += route.getDist();
+        }
+        distanceValueLabel.setText(String.format("%f Units",  totalDistance));
     }
 
     private File displayFileSelectionDialog() {
