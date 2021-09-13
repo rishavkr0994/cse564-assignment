@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Description Text
+ * Reads and parses a symmetric data file to extract city information and provides algorithms to plot a dummy route and
+ * the shortest route between the cities (using a greedy travelling salesman problem algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -20,9 +21,9 @@ public class TSPSymmetric extends TSP {
     private int[] rowFlag;
 
     /**
-     * Description Text
-     * @param file
-     * @throws Exception
+     * Read and parse the file to extract city data
+     * @param file file containing symmetric data
+     * @throws Exception failure to read file or invalid file format encountered while parsing the file
      */
     @Override
     public void parseTextFile(File file) throws Exception {
@@ -46,8 +47,10 @@ public class TSPSymmetric extends TSP {
     }
 
     /**
-     * Description Text
-     * @return
+     * Evaluate a random path for travelling from one city to another and returning to the starting city, by travelling
+     * from one city to another in order of the city number
+     *
+     * @return dummy route list
      */
     @Override
     public ArrayList<Route> calculateDummyRoute() {
@@ -70,9 +73,12 @@ public class TSPSymmetric extends TSP {
     }
 
     /**
-     * Description Text
-     * Algorithm Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
-     * @return
+     * Evaluate the shortest path for travelling from one city to another and returning to the starting city using a
+     * greedy travelling salesman problem algorithm
+     * </p>
+     * Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
+     *
+     * @return shortest route list
      */
     @Override
     public ArrayList<Route> calculateShortestRoute() {

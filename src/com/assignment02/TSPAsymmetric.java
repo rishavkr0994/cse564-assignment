@@ -8,7 +8,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
- * Description Text
+ * Reads and parses an asymmetric data file to extract distance information between the cities and provides algorithms
+ * to plot a dummy route and the shortest route between the cities (using a greedy travelling salesman problem algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -27,9 +28,9 @@ public class TSPAsymmetric extends TSP {
     private int[] rowFlag;
 
     /**
-     * Description Text
-     * @param file
-     * @throws Exception
+     * Read and parse the file to extract distance information between the cities
+     * @param file file containing asymmetric data
+     * @throws Exception failure to read file or invalid file format encountered while parsing the file
      */
     @Override
     public void parseTextFile(File file) throws Exception {
@@ -70,8 +71,10 @@ public class TSPAsymmetric extends TSP {
     }
 
     /**
-     * Description Text
-     * @return
+     * Evaluate a random path for travelling from one city to another and returning to the starting city, by travelling
+     * from one city to another in order of the city number
+     *
+     * @return dummy route list
      */
     @Override
     public ArrayList<Route> calculateDummyRoute() {
@@ -85,8 +88,10 @@ public class TSPAsymmetric extends TSP {
     }
 
     /**
-     * Description Text
-     * @return
+     * Evaluate the shortest path for travelling from one city to another and returning to the starting city using a
+     * greedy travelling salesman problem algorithm
+     *
+     * @return shortest route list
      */
     @Override
     public ArrayList<Route> calculateShortestRoute() {

@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Description Text
+ * Reads and parses a file to extract data and provides algorithms to plot a dummy route and the shortest route between
+ * the cities.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -27,27 +28,29 @@ public abstract class TSP {
     }
 
     /**
-     * Description Text
-     * @param file
-     * @throws Exception
+     * Read and parse the file to extract data
+     * @param file file containing data
+     * @throws Exception failure to read file or invalid file format encountered while parsing the file
      */
     public abstract void parseTextFile(File file) throws Exception;
 
     /**
-     * Description Text
-     * @return
+     * Evaluate a random path for travelling from one city to another and returning to the starting city
+     * @return dummy route list
      */
     public abstract ArrayList<Route> calculateDummyRoute();
 
     /**
-     * Description Text
-     * @return
+     * Evaluate the shortest path for travelling from one city to another and returning to the starting city
+     * @return shortest route list
      */
     public abstract ArrayList<Route> calculateShortestRoute();
 
     /**
-     * Description Text
-     * @return
+     * Get the city list
+     * @return city list
      */
-    public ArrayList<City> getCityList() { return cityList; }
+    public ArrayList<City> getCityList() {
+        return cityList;
+    }
 }
