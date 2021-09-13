@@ -6,6 +6,13 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
+/**
+ * Description
+ *
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-09-11
+ */
 public class Canva extends JPanel {
     private static final double X_GRACE = 20.0;
     private static final double Y_GRACE = 20.0;
@@ -16,11 +23,18 @@ public class Canva extends JPanel {
 
     private double minX, maxX, minY, maxY = 0.0;
 
+    /**
+     * Description Text
+     */
     public Canva() {
         setBackground(Color.decode("#F0F8FF"));
         setBorder(BorderFactory.createLineBorder(Color.decode("#002D62")));
     }
 
+    /**
+     * Description Text
+     * @param g
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -49,7 +63,16 @@ public class Canva extends JPanel {
         }
     }
 
+    /**
+     * Description Text
+     * @return
+     */
     public ArrayList<City> getCityList() { return cityList; }
+
+    /**
+     * Description Text
+     * @param cityList
+     */
     public void setCityList(ArrayList<City> cityList) {
         this.cityList = cityList;
         if (cityList != null && cityList.size() > 0) {
@@ -66,7 +89,16 @@ public class Canva extends JPanel {
         } else minX = maxX = minY = maxY = 0.0;
     }
 
+    /**
+     * Description Text
+     * @return
+     */
     public ArrayList<Route> getRouteList() { return routeList; }
+
+    /**
+     * Description Text
+     * @param routeList
+     */
     public void setRouteList(ArrayList<Route> routeList) {
         this.routeList = routeList;
         this.repaint();

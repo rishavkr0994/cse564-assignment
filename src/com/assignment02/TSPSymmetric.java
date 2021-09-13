@@ -3,6 +3,13 @@ package com.assignment02;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Description Text
+ *
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-09-11
+ */
 public class TSPSymmetric extends TSP {
     private static final String DATA_SECTION_START_TAG = "NODE_COORD_SECTION";
     private static final String DATA_SECTION_END_TAG = "EOF";
@@ -12,6 +19,11 @@ public class TSPSymmetric extends TSP {
     private int[] colFlag;
     private int[] rowFlag;
 
+    /**
+     * Description Text
+     * @param file
+     * @throws Exception
+     */
     @Override
     public void parseTextFile(File file) throws Exception {
         String fileText = readTextFile(file);
@@ -33,6 +45,10 @@ public class TSPSymmetric extends TSP {
         }
     }
 
+    /**
+     * Description Text
+     * @return
+     */
     @Override
     public ArrayList<Route> calculateDummyRoute() {
         ArrayList<Route> result = new ArrayList<>();
@@ -54,6 +70,7 @@ public class TSPSymmetric extends TSP {
     }
 
     /**
+     * Description Text
      * Algorithm Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
      * @return
      */

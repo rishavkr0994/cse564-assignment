@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Some Text Here
+ * Description Text
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
- * @since 2021-09-12
+ * @since 2021-09-11
  */
 public class MainWindow extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
@@ -31,6 +31,9 @@ public class MainWindow extends JFrame {
 
     private TSP tsp = null;
 
+    /**
+     * Description Text
+     */
     public MainWindow() {
         super("Travelling Salesman Path Plotting Tool");
         setLayout(new GridBagLayout());
@@ -52,16 +55,13 @@ public class MainWindow extends JFrame {
         constraints.insets = new Insets(5,100,0,10);
         add(distanceValueLabel, constraints);
 
-        ActionListener routeRadioButtonActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (tsp != null) {
-                    try {
-                        refreshPlot();
-                        showMessageDialog("Route is plotted successfully !");
-                    } catch (Exception exception) {
-                        showMessageDialog("Failed to generate plot !");
-                    }
+        ActionListener routeRadioButtonActionListener = e -> {
+            if (tsp != null) {
+                try {
+                    refreshPlot();
+                    showMessageDialog("Route is plotted successfully !");
+                } catch (Exception exception) {
+                    showMessageDialog("Failed to generate plot !");
                 }
             }
         };
@@ -132,6 +132,10 @@ public class MainWindow extends JFrame {
         add(clearDataButton, constraints);
     }
 
+    /**
+     * Description Text
+     * @param args
+     */
     public static void main(String[] args) {
         MainWindow mainWindow = new MainWindow();
         mainWindow.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
