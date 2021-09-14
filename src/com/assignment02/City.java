@@ -1,7 +1,7 @@
 package com.assignment02;
 
 /**
- * This class is the data structure for storing information about a city i.e. the city number and its x, y co-ordinates
+ * This class is the data structure for storing information about a city i.e. the city number and its x, y co-ordinates.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -13,7 +13,7 @@ public class City {
     private double y;
 
     /**
-     * Get the city number
+     * Get the city number.
      * @return city number
      */
     public int getNum() {
@@ -21,7 +21,7 @@ public class City {
     }
 
     /**
-     * Set the city number
+     * Set the city number.
      * @param num city number
      */
     public void setNum(int num) {
@@ -29,7 +29,7 @@ public class City {
     }
 
     /**
-     * Get the x co-ordinate of the city
+     * Get the x co-ordinate of the city.
      * @return x co-ordinate of the city
      */
     public double getX() {
@@ -37,7 +37,7 @@ public class City {
     }
 
     /**
-     * Set the x co-ordinate of the city
+     * Set the x co-ordinate of the city.
      * @param x x co-ordinate of the city
      */
     public void setX(double x) {
@@ -45,7 +45,7 @@ public class City {
     }
 
     /**
-     * Get the y co-ordinate of the city
+     * Get the y co-ordinate of the city.
      * @return y co-ordinate of the city
      */
     public double getY() {
@@ -53,7 +53,7 @@ public class City {
     }
 
     /**
-     * Set the y co-ordinate of the city
+     * Set the y co-ordinate of the city.
      * @param y y co-ordinate of the city
      */
     public void setY(double y) {
@@ -64,7 +64,7 @@ public class City {
      * Compares the current object with another object for value equality and returns true only when <code>obj</code>
      * object is of type City and has the same x and y co-ordinates.
      *
-     * @param obj object to be compared
+     * @param obj object to be compared for value equality
      * @return boolean value indicating whether <code>obj</code> value equals the current object
      */
     @Override
