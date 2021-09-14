@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * Reads and parses an asymmetric data file to extract distance information between the cities and provides algorithms
- * to plot a dummy route and the shortest route between the cities (using a greedy travelling salesman problem algorithm).
+ * to plot a dummy route and the shortest route between the cities (using a greedy traveling salesman problem algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0

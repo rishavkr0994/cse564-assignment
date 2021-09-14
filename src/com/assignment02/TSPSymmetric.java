@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Reads and parses a symmetric data file to extract city information and provides algorithms to plot a dummy route and
- * the shortest route between the cities (using a greedy travelling salesman problem algorithm).
+ * the shortest route between the cities (using a greedy traveling salesman problem algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0

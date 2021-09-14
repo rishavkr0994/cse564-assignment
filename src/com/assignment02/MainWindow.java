@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * This program implements a GUI to display the travel route between a group of cities. It supports input of both
  * symmetric and asymmetric data and allows selection between a dummy route (by connecting the cities in order) and the
- * shortest route (greedy algorithm for travelling salesman problem). It also displays the total circuit distance for
+ * shortest route (greedy algorithm for traveling salesman problem). It also displays the total circuit distance for
  * the input based on the selected route type
  *
  * @author Zhuoran Li, Rishav Kumar
