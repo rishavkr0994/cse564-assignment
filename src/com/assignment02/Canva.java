@@ -7,7 +7,7 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 /**
- * Defines a custom component to plot the cities and the travel route
+ * Defines a custom component to plot the cities and the travel route.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -24,7 +24,7 @@ public class Canva extends JPanel {
     private double minX, maxX, minY, maxY = 0.0;
 
     /**
-     * Default constructor. Initializes the Canva object
+     * Default constructor. Performs initialization activities.
      */
     public Canva() {
         setBackground(Color.decode("#F0F8FF"));
@@ -32,11 +32,11 @@ public class Canva extends JPanel {
     }
 
     /**
-     * Draws the cities (as points) and routes (as lines) onto the display area. It scales the content based on current
-     * width and height of the component to appropriately fit the display area, leaving a small grace area in all the
-     * four directions
+     * Plots the cities (as points) and routes (as lines) onto the display area. It transforms the x and y co-ordinate
+     * values of the cities based on the height, width of the component and the respective original co-ordinate ranges
+     * to appropriately fit the points within display area.
      *
-     * @param g graphics object to draw the content
+     * @param g graphics object to plot the content
      */
     @Override
     public void paintComponent(Graphics g) {
@@ -67,7 +67,7 @@ public class Canva extends JPanel {
     }
 
     /**
-     * Get the city list
+     * Get the city list.
      * @return city list
      */
     public ArrayList<City> getCityList() {
@@ -75,8 +75,8 @@ public class Canva extends JPanel {
     }
 
     /**
-     * Set the city list. It also evaluates the minimum and maximum x and y co-ordinates from the input
-     * <code>cityList</code> parameter, which is later used to appropriately fit the cities onto the display area
+     * Set the city list. It also evaluates the minimum and maximum x and y co-ordinate values from the input
+     * <code>cityList</code> parameter, which is later used to appropriately fit the cities within the display area.
      *
      * @param cityList city list
      */
@@ -97,7 +97,7 @@ public class Canva extends JPanel {
     }
 
     /**
-     * Get the route list
+     * Get the route list.
      * @return route list
      */
     public ArrayList<Route> getRouteList() {
@@ -105,7 +105,7 @@ public class Canva extends JPanel {
     }
 
     /**
-     * Set the route list. It also triggers a repaint of the display area to reflect the new route
+     * Set the route list. It triggers a repaint of the display area to update the new route.
      * @param routeList route list
      */
     public void setRouteList(ArrayList<Route> routeList) {

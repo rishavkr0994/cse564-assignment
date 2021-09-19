@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
- * Reads and parses an asymmetric data file to extract distance information between the cities and provides algorithms
- * to plot a dummy route and the shortest route between the cities (using a greedy traveling salesman problem algorithm).
+ * Reads and parses an asymmetric data file to extract distance information between the cities and implements algorithms
+ * to find a dummy route and the shortest route between the cities (traveling salesman greedy algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -28,7 +28,8 @@ public class TSPAsymmetric extends TSP {
     private int[] rowFlag;
 
     /**
-     * Read and parse the file to extract distance information between the cities
+     * Read and parse the file to extract distance information between the cities.
+     *
      * @param file file containing asymmetric data
      * @throws Exception failure to read file or invalid file format encountered while parsing the file
      */
@@ -54,8 +55,8 @@ public class TSPAsymmetric extends TSP {
         while (lineIdx < lineList.length && !lineList[lineIdx].equals(DATA_SECTION_END_TAG)) {
             if (!lineList[lineIdx].isBlank()) {
                 String[] distanceList = lineList[lineIdx].trim().split("\\s+");
-                for (int i = 0; i < distanceList.length; i++) {
-                    int distance = Integer.parseInt(distanceList[i]);
+                for (String s : distanceList) {
+                    int distance = Integer.parseInt(s);
                     Route route = new Route();
                     route.setSrc(cityList.get(srcCityIdx));
                     route.setDest(cityList.get(destCityIdx));
@@ -72,8 +73,8 @@ public class TSPAsymmetric extends TSP {
     }
 
     /**
-     * Evaluate a random path for travelling from one city to another and returning to the starting city, by travelling
-     * from one city to another in order of the city number
+     * Evaluate a random path for traveling from one city to another and returning to the starting city, by traveling
+     * from one city to another in order of the city number.
      *
      * @return dummy route list
      */
@@ -89,8 +90,8 @@ public class TSPAsymmetric extends TSP {
     }
 
     /**
-     * Evaluate the shortest path for travelling from one city to another and returning to the starting city using a
-     * greedy travelling salesman problem algorithm
+     * Evaluate the shortest path (traveling salesman greedy algorithm) for traveling from one city to another and
+     * returning to the starting city.
      *
      * @return shortest route list
      */

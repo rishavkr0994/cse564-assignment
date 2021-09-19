@@ -2,7 +2,7 @@ package com.assignment02;
 
 /**
  * This class is the data structure for route information between two cities i.e. the source, destination cities and
- * the distance between them
+ * the distance between them.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -14,7 +14,7 @@ public class Route {
     private double dist;
 
     /**
-     * Get the source city
+     * Get the source city.
      * @return source city
      */
     public City getSrc() {
@@ -22,7 +22,7 @@ public class Route {
     }
 
     /**
-     * Set the source city
+     * Set the source city.
      * @param src source city
      */
     public void setSrc(City src) {
@@ -30,7 +30,7 @@ public class Route {
     }
 
     /**
-     * Get the destination city
+     * Get the destination city.
      * @return destination city
      */
     public City getDest() {
@@ -38,7 +38,7 @@ public class Route {
     }
 
     /**
-     * Set the destination city
+     * Set the destination city.
      * @param dest destination city
      */
     public void setDest(City dest) {
@@ -46,7 +46,7 @@ public class Route {
     }
 
     /**
-     * Get the route distance
+     * Get the route distance.
      * @return route distance
      */
     public double getDist() {
@@ -54,7 +54,7 @@ public class Route {
     }
 
     /**
-     * Set the route distance
+     * Set the route distance.
      * @param distance route distance
      */
     public void setDist(double distance) {

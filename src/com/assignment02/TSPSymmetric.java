@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Reads and parses a symmetric data file to extract city information and provides algorithms to plot a dummy route and
- * the shortest route between the cities (using a greedy traveling salesman problem algorithm).
+ * Reads and parses a symmetric data file to extract city information and implements algorithms to find a dummy route
+ * and the shortest route between the cities (traveling salesman greedy algorithm).
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -22,6 +22,7 @@ public class TSPSymmetric extends TSP {
 
     /**
      * Read and parse the file to extract city data
+     *
      * @param file file containing symmetric data
      * @throws Exception failure to read file or invalid file format encountered while parsing the file
      */
@@ -47,7 +48,7 @@ public class TSPSymmetric extends TSP {
     }
 
     /**
-     * Evaluate a random path for travelling from one city to another and returning to the starting city, by travelling
+     * Evaluate a random path for traveling from one city to another and returning to the starting city, by traveling
      * from one city to another in order of the city number
      *
      * @return dummy route list
@@ -57,7 +58,7 @@ public class TSPSymmetric extends TSP {
         ArrayList<Route> result = new ArrayList<>();
         for (int i = 0; i < cityList.size(); i++) {
             City src = cityList.get(i);
-            City dest = null;
+            City dest;
             if (i == cityList.size() - 1)
                 dest = cityList.get(0);
             else dest = cityList.get(i + 1);
@@ -73,8 +74,8 @@ public class TSPSymmetric extends TSP {
     }
 
     /**
-     * Evaluate the shortest path for travelling from one city to another and returning to the starting city using a
-     * greedy travelling salesman problem algorithm
+     * Evaluate the shortest path (traveling salesman greedy algorithm) for traveling from one city to another and
+     * returning to the starting city.
      * </p>
      * Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
      *
