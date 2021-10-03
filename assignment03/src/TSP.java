@@ -8,7 +8,6 @@ public class TSP implements Observer {
     private double[][] distanceMatrix;
     private int[] colFlag;
     private int[] rowFlag;
-    // protected ArrayList<City> cityList;
 
     /**
      * This method is called whenever the observed object is changed. An
@@ -23,13 +22,16 @@ public class TSP implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         List<City> cityList = ((WorkSpace)o).getCityList();
-        // System.out.println(city);
-        // cityList.add(city);
-        TSP tsp = new TSP();
-        tsp.calculateShortestRoute(cityList);
+        ArrayList<Route> routeList = calculateShortestRoute(cityList);
+
+        ///
+        System.out.println("\n\n");
+        for (Route route : routeList)
+            System.out.println(route.getSrc().getLabel() + " -> " + route.getDest().getLabel());
+        ///
     }
 
-    public ArrayList<Route> calculateShortestRoute(List<City> cityList) {
+    private ArrayList<Route> calculateShortestRoute(List<City> cityList) {
         initDistanceMatrix(cityList);
         ArrayList<Route> result = new ArrayList<>();
 

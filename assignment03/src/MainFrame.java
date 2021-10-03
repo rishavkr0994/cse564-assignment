@@ -6,9 +6,9 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super("TSP");
-        // TSP tsp = new TSP();
+        TSP tsp = new TSP();
         WorkSpacePanel drawArea = new WorkSpacePanel();
-        // drawArea.getWorkSpace().addObserver(tsp);
+        drawArea.getWorkSpace().addObserver(tsp);
         add(drawArea);
     }
 

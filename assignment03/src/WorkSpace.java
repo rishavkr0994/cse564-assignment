@@ -10,6 +10,11 @@ public class WorkSpace extends Observable {
         setChanged();
         notifyObservers();
     }
+    public void moveExistingCity(City city, int x, int y) {
+        city.move(x, y);
+        setChanged();
+        notifyObservers();
+    }
 
     public List<City> getCityList() { return cityList; }
 }

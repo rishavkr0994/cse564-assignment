@@ -50,11 +50,11 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
         if (clickedCity != null) {
             preX = clickedCity.getX() - e.getX();
             preY = clickedCity.getY() - e.getY();
-            clickedCity.move(preX + e.getX(), preY + e.getY());
+            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
         }
         else {
             pressOut = true;
-            String cityName = JOptionPane.showInputDialog("Enter City Name");
+            String cityName = JOptionPane.showInputDialog(this, "Enter City Name");
             City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
             workSpace.addNewCity(city);
         }
@@ -77,7 +77,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     @Override
     public void mouseDragged(MouseEvent e) {
         if (!pressOut) {
-            clickedCity.move(preX + e.getX(), preY + e.getY());
+            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
             repaint();
         }
     }

@@ -11,6 +11,7 @@ public class City {
 
     public int getX() { return bounds.x; }
     public int getY() { return bounds.y; }
+    public String getLabel() { return label; }
 
     public void draw(Graphics g) {
         int x = bounds.x, y =bounds.y, h = bounds.height, w = bounds.width;
