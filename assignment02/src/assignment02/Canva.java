@@ -1,4 +1,4 @@
-package com.assignment02;
+package assignment02;
 
 import javax.swing.*;
 import java.awt.*;

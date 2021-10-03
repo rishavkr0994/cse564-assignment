@@ -1,4 +1,4 @@
-package com.assignment02;
+package assignment02;
 
 /**
  * This class is the data structure for route information between two cities i.e. the source, destination cities and

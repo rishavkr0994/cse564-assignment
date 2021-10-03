@@ -1,4 +1,4 @@
-package com.assignment02;
+package assignment02;
 
 /**
  * This class is the data structure for storing information about a city i.e. the city number and its x, y co-ordinates.
