@@ -4,11 +4,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener{
+public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener {
     private static final int DEFAULT_CITY_HEIGHT = 10;
     private static final int DEFAULT_CITY_WIDTH = 10;
-
-    private final WorkSpace workSpace = new WorkSpace();
 
     City clickedCity = null;
     int preX, preY;
@@ -22,9 +20,14 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
         g2.setColor(Color.red);
-        for (City city : workSpace.getCityList())
+        for (City city : WorkSpace.getInstance().getCityList())
             city.draw(g2);
+
+        g2.setColor(Color.blue);
+        for (Route route : WorkSpace.getInstance().getRouteList())
+            route.getSrc().drawConnect(route.getDest(), g2);
     }
 
     /**
@@ -43,20 +46,20 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        clickedCity = workSpace.getCityList().stream()
+        clickedCity = WorkSpace.getInstance().getCityList().stream()
                 .filter(x -> x.contains(e.getX(), e.getY()))
                 .findFirst().orElse(null);
 
         if (clickedCity != null) {
             preX = clickedCity.getX() - e.getX();
             preY = clickedCity.getY() - e.getY();
-            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
         }
         else {
             pressOut = true;
             String cityName = JOptionPane.showInputDialog(this, "Enter City Name");
             City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
-            workSpace.addNewCity(city);
+            WorkSpace.getInstance().addNewCity(city);
         }
         repaint();
     }
@@ -77,7 +80,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     @Override
     public void mouseDragged(MouseEvent e) {
         if (!pressOut) {
-            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
             repaint();
         }
     }
@@ -120,6 +123,4 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mouseExited(MouseEvent e) { }
-
-    public WorkSpace getWorkSpace() { return workSpace; }
 }

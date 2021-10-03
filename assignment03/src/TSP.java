@@ -22,13 +22,10 @@ public class TSP implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         List<City> cityList = ((WorkSpace)o).getCityList();
-        ArrayList<Route> routeList = calculateShortestRoute(cityList);
-
-        ///
-        System.out.println("\n\n");
-        for (Route route : routeList)
-            System.out.println(route.getSrc().getLabel() + " -> " + route.getDest().getLabel());
-        ///
+        if (cityList.size() > 0) {
+            ArrayList<Route> routeList = calculateShortestRoute(cityList);
+            WorkSpace.getInstance().setRouteList(routeList);
+        }
     }
 
     private ArrayList<Route> calculateShortestRoute(List<City> cityList) {

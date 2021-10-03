@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
@@ -6,10 +7,28 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super("TSP");
-        TSP tsp = new TSP();
+        setLayout(new BorderLayout());
+
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+
+        JMenuItem mItemNew = new JMenuItem("New");
+        JMenuItem mItemLoad = new JMenuItem("Load");
+        JMenuItem mItemSave = new JMenuItem("Save");
+
+        fileMenu.add(mItemNew);
+        fileMenu.add(mItemLoad);
+        fileMenu.add(mItemSave);
+
+        menuBar.add(fileMenu);
+
+        add(menuBar, BorderLayout.NORTH);
+
         WorkSpacePanel drawArea = new WorkSpacePanel();
-        drawArea.getWorkSpace().addObserver(tsp);
-        add(drawArea);
+        TSP tsp = new TSP();
+        WorkSpace.getInstance().addObserver(tsp);
+        add(drawArea, BorderLayout.CENTER);
     }
 
     public static void main(String[] args) {
