@@ -3,24 +3,24 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener{
     private static final int DEFAULT_CITY_HEIGHT = 10;
     private static final int DEFAULT_CITY_WIDTH = 10;
 
-    WorkSpace workSpace = new WorkSpace();
+    private final WorkSpace workSpace = new WorkSpace();
 
-    int preX,preY;
-    boolean pressOut = false;
+    City clickedCity = null;
+    int preX, preY;
+    boolean pressOut = false; // TODO: Variable Not Required
 
     public WorkSpacePanel() {
         addMouseMotionListener(this);
         addMouseListener(this);
     }
 
-    public void paintComponent(Graphics g)
-    {
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.red);
         for (City city : workSpace.getCityList())
@@ -34,12 +34,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      * @param e the event to be processed
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
-        String inputValue = JOptionPane.showInputDialog("add city");
-        City city = new City(inputValue,e.getX(),e.getY(),DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
-        workSpace.addNewCity(city);
-        repaint();
-    }
+    public void mouseClicked(MouseEvent e) { }
 
     /**
      * Invoked when a mouse button has been pressed on a component.
@@ -48,52 +43,22 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mousePressed(MouseEvent e) {
-    /*  preX = (int)(tempe.getX() - e.getY());
-        preY = (int)(tempe.getY() - e.getY());
-        if (tempe.contains(e.getX(),e.getY()))
-        {
-            tempe.move(preX + e.getX(), preY + e.getY());
-            repaint();
-        }else
-        {
+        clickedCity = workSpace.getCityList().stream()
+                .filter(x -> x.contains(e.getX(), e.getY()))
+                .findFirst().orElse(null);
+
+        if (clickedCity != null) {
+            preX = clickedCity.getX() - e.getX();
+            preY = clickedCity.getY() - e.getY();
+            clickedCity.move(preX + e.getX(), preY + e.getY());
+        }
+        else {
             pressOut = true;
-        }*/
-    }
-
-    /**
-     * Invoked when a mouse button has been released on a component.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-       /* if (tempe.contains(e.getX(), e.getY()))
-        {
-            tempe.move(preX + e.getX(), preY + e.getY());
-            repaint();
-        }else
-        {
-            pressOut = false;
-        }*/
-    }
-
-    /**
-     * Invoked when the mouse enters a component.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    /**
-     * Invoked when the mouse exits a component.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void mouseExited(MouseEvent e) {
-
+            String cityName = JOptionPane.showInputDialog("Enter City Name");
+            City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
+            workSpace.addNewCity(city);
+        }
+        repaint();
     }
 
     /**
@@ -111,11 +76,10 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-       /* if (!pressOut)
-        {
-            tempe.move(preX + e.getX(), preY + e.getY());
+        if (!pressOut) {
+            clickedCity.move(preX + e.getX(), preY + e.getY());
             repaint();
-        }*/
+        }
     }
 
     /**
@@ -125,9 +89,37 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      * @param e the event to be processed
      */
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) { }
 
+    /**
+     * Invoked when a mouse button has been released on a component.
+     *
+     * @param e the event to be processed
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (clickedCity != null && clickedCity.contains(e.getX(), e.getY())) {
+            clickedCity.move(preX + e.getX(), preY + e.getY());
+            clickedCity = null;
+            repaint();
+        } else pressOut = false;
     }
 
+    /**
+     * Invoked when the mouse enters a component.
+     *
+     * @param e the event to be processed
+     */
+    @Override
+    public void mouseEntered(MouseEvent e) { }
 
+    /**
+     * Invoked when the mouse exits a component.
+     *
+     * @param e the event to be processed
+     */
+    @Override
+    public void mouseExited(MouseEvent e) { }
+
+    public WorkSpace getWorkSpace() { return workSpace; }
 }

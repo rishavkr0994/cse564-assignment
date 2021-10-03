@@ -10,8 +10,6 @@ public class WorkSpace extends Observable {
         setChanged();
         notifyObservers();
     }
-    public List<City> getCityList()
-    {
-        return cityList;
-    }
+
+    public List<City> getCityList() { return cityList; }
 }
