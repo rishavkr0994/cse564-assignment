@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
@@ -9,12 +13,36 @@ public class MainFrame extends JFrame {
         super("TSP");
         setLayout(new BorderLayout());
 
+        WorkSpacePanel drawArea = new WorkSpacePanel();
+        TSP tsp = new TSP();
+        WorkSpace.getInstance().addObserver(tsp);
+        add(drawArea, BorderLayout.CENTER);
+
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem mItemNew = new JMenuItem("New");
+        mItemNew.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                WorkSpace.getInstance().clearAllCities();
+                drawArea.repaint();
+            }
+        });
+
         JMenuItem mItemLoad = new JMenuItem("Load");
+        mItemLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                File selectedFile = displayFileSelectionDialog();
+                try {
+                    WorkSpace.getInstance().load(selectedFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                drawArea.repaint();
+            }
+        });
+
         JMenuItem mItemSave = new JMenuItem("Save");
 
         fileMenu.add(mItemNew);
@@ -25,10 +53,16 @@ public class MainFrame extends JFrame {
 
         add(menuBar, BorderLayout.NORTH);
 
-        WorkSpacePanel drawArea = new WorkSpacePanel();
-        TSP tsp = new TSP();
-        WorkSpace.getInstance().addObserver(tsp);
-        add(drawArea, BorderLayout.CENTER);
+
+
+
+    }
+
+    private File displayFileSelectionDialog() {
+        JFileChooser jFileChooser = new JFileChooser();
+        if (jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+            return jFileChooser.getSelectedFile();
+        else return null;
     }
 
     public static void main(String[] args) {

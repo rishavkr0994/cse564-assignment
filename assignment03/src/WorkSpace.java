@@ -1,8 +1,11 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 public class WorkSpace extends Observable {
+    private static final int DEFAULT_CITY_HEIGHT = 10;
+    private static final int DEFAULT_CITY_WIDTH = 10;
     private final List<City> cityList = new ArrayList<>();
     private ArrayList<Route> routeList = new ArrayList<>();
 
@@ -29,6 +32,30 @@ public class WorkSpace extends Observable {
         cityList.clear();
         setChanged();
         notifyObservers();
+    }
+
+    public void load(File file) throws IOException {
+        cityList.clear();
+        String lineText;
+        StringBuilder fileTextStringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        while ((lineText = br.readLine()) != null) {
+            fileTextStringBuilder.append(lineText).append("\n");
+        }
+        String[] lineList = fileTextStringBuilder.toString().split("\n");
+        int lineIdx = 0;
+        while(lineIdx < lineList.length) {
+            String[] tokens = lineList[lineIdx].split(" ");
+            City city = new City(tokens[0],Integer.parseInt(tokens[1]),Integer.parseInt(tokens[2]),DEFAULT_CITY_WIDTH,DEFAULT_CITY_HEIGHT);
+            cityList.add(city);
+            lineIdx++;
+        }
+            setChanged();
+            notifyObservers();
+    }
+    public void save(String filePath)
+    {
+
     }
 
     public List<City> getCityList() { return cityList; }
