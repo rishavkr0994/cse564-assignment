@@ -44,6 +44,16 @@ public class MainFrame extends JFrame {
         });
 
         JMenuItem mItemSave = new JMenuItem("Save");
+        mItemSave.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                File selectedFile = displayFileSaveDialog();
+                try {
+                    WorkSpace.getInstance().save(selectedFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         fileMenu.add(mItemNew);
         fileMenu.add(mItemLoad);
@@ -52,10 +62,14 @@ public class MainFrame extends JFrame {
         menuBar.add(fileMenu);
 
         add(menuBar, BorderLayout.NORTH);
+    }
 
-
-
-
+    public static void main(String[] args) {
+        MainFrame mainFrame = new MainFrame();
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+        mainFrame.setVisible(true);
     }
 
     private File displayFileSelectionDialog() {
@@ -65,11 +79,10 @@ public class MainFrame extends JFrame {
         else return null;
     }
 
-    public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-        mainFrame.setVisible(true);
+    private File displayFileSaveDialog() {
+        JFileChooser jFileChooser = new JFileChooser();
+        if (jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+            return jFileChooser.getSelectedFile();
+        else return null;
     }
 }

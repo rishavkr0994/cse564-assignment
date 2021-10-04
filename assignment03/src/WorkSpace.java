@@ -46,16 +46,20 @@ public class WorkSpace extends Observable {
         int lineIdx = 0;
         while(lineIdx < lineList.length) {
             String[] tokens = lineList[lineIdx].split(" ");
-            City city = new City(tokens[0],Integer.parseInt(tokens[1]),Integer.parseInt(tokens[2]),DEFAULT_CITY_WIDTH,DEFAULT_CITY_HEIGHT);
+            City city = new City(tokens[0],Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
+                    DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
             cityList.add(city);
             lineIdx++;
         }
-            setChanged();
-            notifyObservers();
+        setChanged();
+        notifyObservers();
     }
-    public void save(String filePath)
-    {
 
+    public void save(File file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
+        for(City city : cityList)
+            writer.write(String.format("%s %d %d\n", city.getLabel(), city.getX(), city.getY()));
+        writer.close();
     }
 
     public List<City> getCityList() { return cityList; }
