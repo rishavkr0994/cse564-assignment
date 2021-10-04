@@ -25,7 +25,7 @@ public class TSP implements Observer {
         if (cityList.size() > 0) {
             ArrayList<Route> routeList = calculateShortestRoute(cityList);
             WorkSpace.getInstance().setRouteList(routeList);
-        }
+        } else WorkSpace.getInstance().setRouteList(new ArrayList<>());
     }
 
     private ArrayList<Route> calculateShortestRoute(List<City> cityList) {

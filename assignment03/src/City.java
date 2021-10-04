@@ -1,8 +1,8 @@
 import java.awt.*;
 
 public class City {
-    private Rectangle bounds;
-    private String label;
+    private final Rectangle bounds;
+    private final String label;
 
     public City(String label, int x, int y, int w, int h) {
         this.bounds = new Rectangle(x, y, w, h);

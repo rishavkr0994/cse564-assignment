@@ -54,14 +54,17 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
             preX = clickedCity.getX() - e.getX();
             preY = clickedCity.getY() - e.getY();
             WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            repaint();
         }
         else {
             pressOut = true;
             String cityName = JOptionPane.showInputDialog(this, "Enter City Name");
-            City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
-            WorkSpace.getInstance().addNewCity(city);
+            if (cityName != null) {
+                City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
+                WorkSpace.getInstance().addNewCity(city);
+                repaint();
+            }
         }
-        repaint();
     }
 
     /**
