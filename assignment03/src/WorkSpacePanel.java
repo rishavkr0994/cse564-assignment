@@ -5,12 +5,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener {
-    private static final int DEFAULT_CITY_HEIGHT = 10;
-    private static final int DEFAULT_CITY_WIDTH = 10;
+    private static final int DEFAULT_CITY_HEIGHT = 20;
+    private static final int DEFAULT_CITY_WIDTH = 20;
 
     City clickedCity = null;
     int preX, preY;
-    boolean pressOut = false; // TODO: Variable Not Required
 
     public WorkSpacePanel() {
         addMouseMotionListener(this);
@@ -26,6 +25,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
             city.draw(g2);
 
         g2.setColor(Color.blue);
+        g2.setStroke(new BasicStroke(2));
         for (Route route : WorkSpace.getInstance().getRouteList())
             route.getSrc().drawConnect(route.getDest(), g2);
     }
@@ -57,9 +57,8 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
             repaint();
         }
         else {
-            pressOut = true;
             String cityName = JOptionPane.showInputDialog(this, "Enter City Name");
-            if (cityName != null) {
+            if (cityName != null && !cityName.isEmpty()) {
                 City city = new City(cityName, e.getX(), e.getY(), DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
                 WorkSpace.getInstance().addNewCity(city);
                 repaint();
@@ -82,7 +81,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!pressOut) {
+        if (clickedCity != null) {
             WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
             repaint();
         }
@@ -108,7 +107,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
             clickedCity.move(preX + e.getX(), preY + e.getY());
             clickedCity = null;
             repaint();
-        } else pressOut = false;
+        }
     }
 
     /**

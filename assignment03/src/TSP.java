@@ -18,7 +18,6 @@ public class TSP implements Observer {
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>
      */
-    
     @Override
     public void update(Observable o, Object arg) {
         List<City> cityList = ((WorkSpace)o).getCityList();
