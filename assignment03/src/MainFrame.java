@@ -1,13 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * This program implements a GUI to display the travel route between a group of cities. It supports user
- * clear, save and load the city list by JMenu.
+ * This program implements a GUI to display the optimal travel route between a group of cities. The cities can be marked
+ * on screen with a mouse click. Also, the marked cities can be moved to a new location by clicking and dragging it. The
+ * program also supports additional functions to clear the screen and load/save the city data from/to a text file.
+ *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
  * @since 2021-10-02
@@ -17,10 +17,12 @@ public class MainFrame extends JFrame {
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
     /**
-     * Default constructor. Initializes the GUI components and their defines their responses to user actions.
+     * Default constructor. Initializes the GUI components and their defines their responses to user actions. It also
+     * sets the TSP class as an observer of the WorkSpace class, so that it can respond to addition/movement of a city
+     * by re-evaluating the optimal route.
      */
     public MainFrame() {
-        super("TSP");
+        super("Travelling Salesman Path Plotting Tool");
         setLayout(new BorderLayout());
 
         WorkSpacePanel drawArea = new WorkSpacePanel();
@@ -33,39 +35,38 @@ public class MainFrame extends JFrame {
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem mItemNew = new JMenuItem("New");
-        mItemNew.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                WorkSpace.getInstance().clearAllCities();
-                drawArea.repaint();
-            }
+        mItemNew.addActionListener(ev -> {
+            WorkSpace.getInstance().clearAllCities();
+            drawArea.repaint();
         });
 
         JMenuItem mItemLoad = new JMenuItem("Load");
-        mItemLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                File selectedFile = displayFileSelectionDialog();
-                try {
-                    WorkSpace.getInstance().load(selectedFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        mItemLoad.addActionListener(ev -> {
+            File selectedFile = displayFileSelectionDialog();
+            if (selectedFile != null) {
+                try { WorkSpace.getInstance().load(selectedFile); }
+                catch (IOException e) {
+                    String msg = String.format("Failed To Load Data From File\nException: %s", e);
+                    JOptionPane.showMessageDialog(this, msg);
                 }
                 drawArea.repaint();
             }
         });
 
         JMenuItem mItemSave = new JMenuItem("Save");
-        mItemSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                File selectedFile = displayFileSaveDialog();
-                try {
-                    WorkSpace.getInstance().save(selectedFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        mItemSave.addActionListener(ev -> {
+            File selectedFile = displayFileSaveDialog();
+            if (selectedFile != null) {
+                try { WorkSpace.getInstance().save(selectedFile); }
+                catch (IOException e) {
+                    String msg = String.format("Failed To Save Data To File\nException: %s", e);
+                    JOptionPane.showMessageDialog(this, msg);
                 }
             }
         });
 
         fileMenu.add(mItemNew);
+        fileMenu.add(new JSeparator());
         fileMenu.add(mItemLoad);
         fileMenu.add(mItemSave);
 

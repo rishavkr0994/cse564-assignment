@@ -4,15 +4,17 @@ import java.util.List;
 import java.util.Observable;
 
 /**
- * As an observable and a singleton update and send data to the observer.
+ * A repository which contains the city list and route information. It extends the Observable class, so that it can
+ * notify its observers for data updates i.e. when a new city is added or an existing city is moved.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
  * @since 2021-10-02
  */
 public class WorkSpace extends Observable {
-    private static final int DEFAULT_CITY_HEIGHT = 10;
-    private static final int DEFAULT_CITY_WIDTH = 10;
+    private static final int DEFAULT_CITY_HEIGHT = 20;
+    private static final int DEFAULT_CITY_WIDTH = 20;
+
     private final List<City> cityList = new ArrayList<>();
     private ArrayList<Route> routeList = new ArrayList<>();
 
@@ -21,8 +23,9 @@ public class WorkSpace extends Observable {
     private static WorkSpace _instance;
 
     /**
-     * Get the WorkSpace instance.
-     * @return instance.
+     * Gets the WorkSpace instance.
+     *
+     * @return instance of this class
      */
     public static WorkSpace getInstance() {
         if (_instance == null)
@@ -31,7 +34,7 @@ public class WorkSpace extends Observable {
     }
 
     /**
-     * Add new city to the cityList and notify the observer.
+     * Add a new city and notify the observers.
      */
     public void addNewCity(City city) {
         cityList.add(city);
@@ -40,7 +43,7 @@ public class WorkSpace extends Observable {
     }
 
     /**
-     * Move city to the new place and notify the observer
+     * Move an existing city to the new co-ordinates and notify the observers.
      */
     public void moveExistingCity(City city, int x, int y) {
         city.move(x, y);
@@ -49,7 +52,7 @@ public class WorkSpace extends Observable {
     }
 
     /**
-     * Clear all cities and notify observer.
+     * Clear all the cities and notify the observers.
      */
     public void clearAllCities() {
         cityList.clear();
@@ -57,38 +60,75 @@ public class WorkSpace extends Observable {
         notifyObservers();
     }
 
+    /**
+     * Load a list of cities from a file and notify the observers.
+     *
+     * @param file handle to file containing data
+     * @throws IOException  if the file does not exist, is a directory rather than a regular file, or for some other
+     * reason cannot be opened for reading.
+     */
     public void load(File file) throws IOException {
         cityList.clear();
+
+        String fileText = readTextFile(file);
+        String[] lineList = fileText.split("\n");
+
+        for (String line : lineList) {
+            String[] tokens = line.split(" ");
+            City city = new City(tokens[0], Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
+                    DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
+            cityList.add(city);
+        }
+
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Save the list of cities to a file.
+     *
+     * @param file handle to the file where the data is to be saved
+     * @throws IOException  if the named file exists but is a directory rather than a regular file, does not exist but
+     * cannot be created, or cannot be opened for any other reason
+     */
+    public void save(File file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
+        for (City city : cityList)
+            writer.write(String.format("%s %d %d\n", city.getLabel(), city.getX(), city.getY()));
+        writer.close();
+    }
+
+    /**
+     * Get the list of cities.
+     * @return list of cities
+     */
+    public List<City> getCityList() {
+        return cityList;
+    }
+
+    /**
+     * Get the route information.
+     * @return route information
+     */
+    public List<Route> getRouteList() {
+        return routeList;
+    }
+
+    /**
+     * Set the route information.
+     * @param routeList route information
+     */
+    public void setRouteList(ArrayList<Route> routeList) {
+        this.routeList = routeList;
+    }
+
+    private String readTextFile(File file) throws IOException {
         String lineText;
         StringBuilder fileTextStringBuilder = new StringBuilder();
         BufferedReader br = new BufferedReader(new FileReader(file));
         while ((lineText = br.readLine()) != null) {
             fileTextStringBuilder.append(lineText).append("\n");
         }
-        String[] lineList = fileTextStringBuilder.toString().split("\n");
-        int lineIdx = 0;
-        while(lineIdx < lineList.length) {
-            String[] tokens = lineList[lineIdx].split(" ");
-            City city = new City(tokens[0],Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
-                    DEFAULT_CITY_WIDTH, DEFAULT_CITY_HEIGHT);
-            cityList.add(city);
-            lineIdx++;
-        }
-        setChanged();
-        notifyObservers();
-    }
-
-    public void save(File file) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath()));
-        for(City city : cityList)
-            writer.write(String.format("%s %d %d\n", city.getLabel(), city.getX(), city.getY()));
-        writer.close();
-    }
-
-    public List<City> getCityList() { return cityList; }
-
-    public List<Route> getRouteList() { return routeList; }
-    public void setRouteList(ArrayList<Route> routeList ) {
-        this.routeList = routeList;
+        return fileTextStringBuilder.toString();
     }
 }

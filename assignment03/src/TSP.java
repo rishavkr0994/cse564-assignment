@@ -4,8 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * As an observer observe and receive data from observable. Using algorithms to find the shortest route
- * (traveling salesman greedy algorithm) between the cities.
+ * Implements algorithms to find the shortest route between a list of cities (traveling salesman greedy algorithm). It
+ * implements the <tt>Observer</tt> interface to support observing changes in an <tt>Observable</tt> (in our case, it is
+ * the WorkSpace class)
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -18,10 +19,11 @@ public class TSP implements Observer {
     private int[] rowFlag;
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
+     * This method is called whenever the observed object is changed. An application calls an <tt>Observable</tt>
+     * object's <code>notifyObservers</code> method to have all the object's observers notified of the change.
+     * <p>
+     * This function gets the list of cities from the <tt>Observable</tt> and evaluates the shortest route using a
+     * traveling salesman greedy algorithm. It then sets the evaluation route information in the WorkSpace class.
      *
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>
@@ -35,14 +37,6 @@ public class TSP implements Observer {
         } else WorkSpace.getInstance().setRouteList(new ArrayList<>());
     }
 
-    /**
-     * Evaluate the shortest path (traveling salesman greedy algorithm) for traveling from one city to another and
-     * returning to the starting city.
-     * </p>
-     * Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
-     *
-     * @return shortest route list
-     */
     private ArrayList<Route> calculateShortestRoute(List<City> cityList) {
         initDistanceMatrix(cityList);
         ArrayList<Route> result = new ArrayList<>();

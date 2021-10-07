@@ -2,7 +2,9 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 
 /**
- * This class is the data structure for storing information about a city.
+ * This class is the data structure for storing information about a city i.e. the city name and its bounds. It also
+ * defines functions to update the city bounds as well as fdr graphics operations to draw the city / draw the path
+ * between two cities using a Graphics object.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -13,41 +15,43 @@ public class City {
     private final String label;
 
     /**
-     * The constructor of the city.
-     * @param label City name.
-     * @param x City x-coordinate.
-     * @param y City y-coordinate.
-     * @param w The width of the city rectangle.
-     * @param h The high of the city rectangle.
+     * The constructor to create a new city.
+     *
+     * @param label city name
+     * @param x x-coordinate of the upper left corner of the city rectangle to be drawn
+     * @param y y-coordinate of the upper left corner of the city rectangle to be drawn
+     * @param w width of the city rectangle to be drawn
+     * @param h height of the city rectangle to be drawn
      */
     public City(String label, int x, int y, int w, int h) {
         this.bounds = new Rectangle(x, y, w, h);
         this.label = label;
     }
     /**
-     * Get the city x-coordinate.
-     * @return X-coordinate.
+     * Get the x-coordinate of the upper left corner of the city rectangle
+     * @return x-coordinate of the upper left corner of the city rectangle
      */
     public int getX() { return bounds.x; }
 
     /**
-     * Get the city y-coordinate.
-     * @return Y-coordinate.
+     * Get the y-coordinate of the upper left corner the city rectangle
+     * @return y-coordinate of the upper left corner the city rectangle
      */
     public int getY() { return bounds.y; }
 
     /**
      * Get the city name.
-     * @return City name.
+     * @return city name.
      */
     public String getLabel() { return label; }
 
     /**
-     * Draw the city in the component.
-     * @param g Graphics
+     * Plots the city (as a rectangle) using a Graphics object.
+     * @param g graphics object to plot the content
      */
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         int x = bounds.x, y = bounds.y, h = bounds.height, w = bounds.width;
+        g.setColor(Color.red);
         g.drawRect(x, y, w, h);
         Color c = g.getColor();
         g.setColor(Color.white);
@@ -59,36 +63,35 @@ public class City {
     }
 
     /**
-     * Move the city to somewhere.
-     * @param x, X-coordinate of the new place
-     * @param y, Y-coordinate of the new place
+     * Update the bounds of this city.
+     * @param x, new x-coordinate of the upper left corner of the city rectangle
+     * @param y, new y-coordinate of the upper left corner the city rectangle
      */
     public void move(int x, int y) {
         bounds.x = x;
         bounds.y = y;
     }
-    /**
-     * Find the center of the city.
-     * @return center of the city.
-     */
+
     private Point center() {
         return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
     }
 
     /**
-     * Draw a line between two cities.
-     * @param b, Another city.
-     * @param g, Graphics2D
+     * Plots the route (as a line) between this city and the destination city <code>b</code> using a Graphics object.
+     * @param b destination city
+     * @param g graphics object to plot the content
      */
     public void drawConnect(City b, Graphics2D g) {
+        g.setColor(Color.blue);
+        g.setStroke(new BasicStroke(2));
         g.draw(new Line2D.Float(center().x, center().y, b.center().x, b.center().y));
     }
 
     /**
-     * Prevent two cities in the same place.
-     * @param x City x-coordinate.
-     * @param y City y-coordinate.
-     * @return valid or not
+     * Checks if a particular co-ordinate belongs to this city and returns a boolean indicator for the same.
+     * @param x x-coordinate.
+     * @param y y-coordinate.
+     * @return whether this city contains the input co-ordinates
      */
     public boolean contains(int x, int y) {
         return bounds.contains(x, y);

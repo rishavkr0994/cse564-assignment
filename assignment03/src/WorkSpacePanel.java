@@ -5,8 +5,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * A panel to show the connection between cities. It supports user to move city to somewhere
- * and re-calculate the route between cities.
+ * A panel to display the cities and the route between them. It allows marking of a new city with a mouse click and
+ * also allows to move an existing city to a new location by clicking the city and dragging it to a new location.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -20,7 +20,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     int preX, preY;
 
     /**
-     * The constructor of the WorkSpacePanel.
+     * Default constructor. It defines the listener for the mouse actions.
      */
     public WorkSpacePanel() {
         addMouseMotionListener(this);
@@ -28,26 +28,24 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     }
 
     /**
-     * Paint the component to show the route.
-     * @param g Graphics
+     * Plots the cities (as rectangles) and routes (as lines) onto the display area. The city names are also displayed
+     * alongside the cities.
+     *
+     * @param g graphics object to plot the content
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setColor(Color.red);
         for (City city : WorkSpace.getInstance().getCityList())
             city.draw(g2);
 
-        g2.setColor(Color.blue);
-        g2.setStroke(new BasicStroke(2));
         for (Route route : WorkSpace.getInstance().getRouteList())
             route.getSrc().drawConnect(route.getDest(), g2);
     }
 
     /**
-     * Invoked when the mouse button has been clicked (pressed
-     * and released) on a component.
+     * Invoked when the mouse button has been clicked (pressed and released) on a component.
      *
      * @param e the event to be processed
      */
@@ -56,6 +54,9 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
 
     /**
      * Invoked when a mouse button has been pressed on a component.
+     * <p>
+     * A new city is marked when the user clicks on an empty space, else if the user clicks on a city, the city movement
+     * operation is initiated.
      *
      * @param e the event to be processed
      */
@@ -82,15 +83,15 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     }
 
     /**
-     * Invoked when a mouse button is pressed on a component and then
-     * dragged.  {@code MOUSE_DRAGGED} events will continue to be
-     * delivered to the component where the drag originated until the
-     * mouse button is released (regardless of whether the mouse position
-     * is within the bounds of the component).
+     * Invoked when a mouse button is pressed on a component and then dragged. {@code MOUSE_DRAGGED} events will
+     * continue to be delivered to the component where the drag originated until the mouse button is released
+     * (regardless of whether the mouse position is within the bounds of the component).
      * <p>
-     * Due to platform-dependent Drag&amp;Drop implementations,
-     * {@code MOUSE_DRAGGED} events may not be delivered during a native
-     * Drag&amp;Drop operation.
+     * Due to platform-dependent Drag&amp;Drop implementations,{@code MOUSE_DRAGGED} events may not be delivered during
+     * a native Drag&amp;Drop operation.
+     * <p>
+     * If a city movement is in progress, it updates the co-ordinates of the moving city based on the current cursor
+     * location on screen.
      *
      * @param e the event to be processed
      */
@@ -103,8 +104,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     }
 
     /**
-     * Invoked when the mouse cursor has been moved onto a component
-     * but no buttons have been pushed.
+     * Invoked when the mouse cursor has been moved onto a component but no buttons have been pushed.
      *
      * @param e the event to be processed
      */
@@ -113,6 +113,8 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
 
     /**
      * Invoked when a mouse button has been released on a component.
+     * <p>
+     * Commits the city movement operation and updates the city co-ordinates to the current cursor location on screen.
      *
      * @param e the event to be processed
      */
