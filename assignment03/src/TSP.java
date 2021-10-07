@@ -3,6 +3,14 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * As an observer observe and receive data from observable. Using algorithms to find the shortest route
+ * (traveling salesman greedy algorithm) between the cities.
+ *
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-10-02
+ */
 public class TSP implements Observer {
     private int cityNum;
     private double[][] distanceMatrix;
@@ -27,6 +35,14 @@ public class TSP implements Observer {
         } else WorkSpace.getInstance().setRouteList(new ArrayList<>());
     }
 
+    /**
+     * Evaluate the shortest path (traveling salesman greedy algorithm) for traveling from one city to another and
+     * returning to the starting city.
+     * </p>
+     * Source: https://blog.csdn.net/wangqiuyun/article/details/38680151
+     *
+     * @return shortest route list
+     */
     private ArrayList<Route> calculateShortestRoute(List<City> cityList) {
         initDistanceMatrix(cityList);
         ArrayList<Route> result = new ArrayList<>();

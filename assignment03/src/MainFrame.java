@@ -5,10 +5,20 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This program implements a GUI to display the travel route between a group of cities. It supports user
+ * clear, save and load the city list by JMenu.
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-10-02
+ */
 public class MainFrame extends JFrame {
     private static final int DEFAULT_WINDOW_HEIGHT = 500;
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
+    /**
+     * Default constructor. Initializes the GUI components and their defines their responses to user actions.
+     */
     public MainFrame() {
         super("TSP");
         setLayout(new BorderLayout());
@@ -64,6 +74,12 @@ public class MainFrame extends JFrame {
         add(menuBar, BorderLayout.NORTH);
     }
 
+    /**
+     * Entry point for the program. It creates an instance of the GUI, configures its physical attributes and displays
+     * it on screen.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         MainFrame mainFrame = new MainFrame();
         mainFrame.setLocationRelativeTo(null);

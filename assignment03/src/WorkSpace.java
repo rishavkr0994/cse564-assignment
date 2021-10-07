@@ -3,6 +3,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+/**
+ * As an observable and a singleton update and send data to the observer.
+ *
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-10-02
+ */
 public class WorkSpace extends Observable {
     private static final int DEFAULT_CITY_HEIGHT = 10;
     private static final int DEFAULT_CITY_WIDTH = 10;
@@ -12,22 +19,38 @@ public class WorkSpace extends Observable {
     private WorkSpace() { }
 
     private static WorkSpace _instance;
+
+    /**
+     * Get the WorkSpace instance.
+     * @return instance.
+     */
     public static WorkSpace getInstance() {
         if (_instance == null)
             _instance = new WorkSpace();
         return _instance;
     }
 
+    /**
+     * Add new city to the cityList and notify the observer.
+     */
     public void addNewCity(City city) {
         cityList.add(city);
         setChanged();
         notifyObservers();
     }
+
+    /**
+     * Move city to the new place and notify the observer
+     */
     public void moveExistingCity(City city, int x, int y) {
         city.move(x, y);
         setChanged();
         notifyObservers();
     }
+
+    /**
+     * Clear all cities and notify observer.
+     */
     public void clearAllCities() {
         cityList.clear();
         setChanged();

@@ -4,6 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * A panel to show the connection between cities. It supports user to move city to somewhere
+ * and re-calculate the route between cities.
+ *
+ * @author Zhuoran Li, Rishav Kumar
+ * @version 1.0
+ * @since 2021-10-02
+ */
 public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener {
     private static final int DEFAULT_CITY_HEIGHT = 20;
     private static final int DEFAULT_CITY_WIDTH = 20;
@@ -11,11 +19,18 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     City clickedCity = null;
     int preX, preY;
 
+    /**
+     * The constructor of the WorkSpacePanel.
+     */
     public WorkSpacePanel() {
         addMouseMotionListener(this);
         addMouseListener(this);
     }
 
+    /**
+     * Paint the component to show the route.
+     * @param g Graphics
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
