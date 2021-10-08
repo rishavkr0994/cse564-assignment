@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+// TODO: Mention about Observable in Javadoc
 /**
  * Implements algorithms to find the shortest route between a list of cities (traveling salesman greedy algorithm). It
  * implements the <tt>Observer</tt> interface to support observing changes in an <tt>Observable</tt> (in our case, it is
@@ -19,6 +20,8 @@ public class TSP extends Observable implements Observer {
     private int[] rowFlag;
     private ArrayList<Route> routeList;
 
+    // TODO: Can consider updating to routeList in WorkSpace to use the benefits of Singleton, else discard Singleton
+    // TODO: Mention about the change due to addition of Observable
     /**
      * This method is called whenever the observed object is changed. An application calls an <tt>Observable</tt>
      * object's <code>notifyObservers</code> method to have all the object's observers notified of the change.
@@ -32,12 +35,20 @@ public class TSP extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         List<City> cityList = ((WorkSpace)o).getCityList();
-        if (cityList.size() > 0) {
+        if (cityList.size() > 0)
             routeList = calculateShortestRoute(cityList);
-            setChanged();
-            notifyObservers();
-           /* WorkSpace.getInstance().setRouteList(routeList);*/
-        } else WorkSpace.getInstance().setRouteList(new ArrayList<>());
+        else routeList = new ArrayList<>();
+
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Get the route information.
+     * @return route information
+     */
+    public ArrayList<Route> getRouteList() {
+        return routeList;
     }
 
     private ArrayList<Route> calculateShortestRoute(List<City> cityList) {
@@ -100,9 +111,5 @@ public class TSP extends Observable implements Observer {
     private double getEuclideanDistance(City src, City dest) {
         double x1 = src.getX(), y1 = src.getY(), x2 = dest.getX(), y2 = dest.getY();
         return Math.sqrt((x1 + x2) * Math.abs(x1 - x2) + (y1 + y2) * Math.abs(y1 - y2));
-    }
-    public ArrayList<Route> getRouteList()
-    {
-        return routeList;
     }
 }

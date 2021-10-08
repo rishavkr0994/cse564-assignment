@@ -28,7 +28,8 @@ public class MainFrame extends JFrame {
         WorkSpacePanel drawArea = new WorkSpacePanel();
         TSP tsp = new TSP();
         WorkSpace.getInstance().addObserver(tsp);
-        tsp.addObserver(WorkSpace.getInstance());
+        tsp.addObserver(drawArea);
+
         add(drawArea, BorderLayout.CENTER);
 
         JMenuBar menuBar = new JMenuBar();
