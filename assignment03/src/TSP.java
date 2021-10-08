@@ -12,11 +12,12 @@ import java.util.Observer;
  * @version 1.0
  * @since 2021-10-02
  */
-public class TSP implements Observer {
+public class TSP extends Observable implements Observer {
     private int cityNum;
     private double[][] distanceMatrix;
     private int[] colFlag;
     private int[] rowFlag;
+    private ArrayList<Route> routeList;
 
     /**
      * This method is called whenever the observed object is changed. An application calls an <tt>Observable</tt>
@@ -32,8 +33,10 @@ public class TSP implements Observer {
     public void update(Observable o, Object arg) {
         List<City> cityList = ((WorkSpace)o).getCityList();
         if (cityList.size() > 0) {
-            ArrayList<Route> routeList = calculateShortestRoute(cityList);
-            WorkSpace.getInstance().setRouteList(routeList);
+            routeList = calculateShortestRoute(cityList);
+            setChanged();
+            notifyObservers();
+           /* WorkSpace.getInstance().setRouteList(routeList);*/
         } else WorkSpace.getInstance().setRouteList(new ArrayList<>());
     }
 
@@ -97,5 +100,9 @@ public class TSP implements Observer {
     private double getEuclideanDistance(City src, City dest) {
         double x1 = src.getX(), y1 = src.getY(), x2 = dest.getX(), y2 = dest.getY();
         return Math.sqrt((x1 + x2) * Math.abs(x1 - x2) + (y1 + y2) * Math.abs(y1 - y2));
+    }
+    public ArrayList<Route> getRouteList()
+    {
+        return routeList;
     }
 }
