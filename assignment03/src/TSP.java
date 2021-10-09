@@ -3,11 +3,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-// TODO: Mention about Observable in Javadoc
 /**
- * Implements algorithms to find the shortest route between a list of cities (traveling salesman greedy algorithm). It
- * implements the <tt>Observer</tt> interface to support observing changes in an <tt>Observable</tt> (in our case, it is
- * the WorkSpace class)
+ * Finds the shortest route between a list of cities (using traveling salesman greedy algorithm).
+ * <p>
+ * It implements the <tt>Observer</tt> interface so that it can observe an <tt>Observable</tt> (in our case, it is the
+ * WorkSpace class) and re-evaluate the route. Also, it extends <tt>Observable</tt> so that it can notify its
+ * <tt>Observer</tt> when the route is re-evaluated.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -20,14 +21,12 @@ public class TSP extends Observable implements Observer {
     private int[] rowFlag;
     private ArrayList<Route> routeList;
 
-    // TODO: Can consider updating to routeList in WorkSpace to use the benefits of Singleton, else discard Singleton
-    // TODO: Mention about the change due to addition of Observable
     /**
      * This method is called whenever the observed object is changed. An application calls an <tt>Observable</tt>
      * object's <code>notifyObservers</code> method to have all the object's observers notified of the change.
      * <p>
-     * This function gets the list of cities from the <tt>Observable</tt> and evaluates the shortest route using a
-     * traveling salesman greedy algorithm. It then sets the evaluation route information in the WorkSpace class.
+     * This function gets the list of cities from an <tt>Observable</tt> and evaluates the shortest route using a
+     * traveling salesman greedy algorithm. It then notifies its <tt>Observer</tt> of the change in the shortest route.
      *
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>

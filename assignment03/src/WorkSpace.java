@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Observable;
 
 /**
- * A repository which contains the city list and route information. It extends the Observable class, so that it can
- * notify its observers for data updates i.e. when a new city is added or an existing city is moved.
+ * A repository which contains the city list and route information. It extends the </tt>Observable</tt> class, so that
+ * it can notify its <tt>Observer</tt> for updates i.e. when a new city is added or an existing city is moved.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
@@ -18,20 +18,7 @@ public class WorkSpace extends Observable {
     private final List<City> cityList = new ArrayList<>();
     private ArrayList<Route> routeList;
 
-    private WorkSpace() { }
-
-    private static WorkSpace _instance;
-
-    /**
-     * Gets the WorkSpace instance.
-     *
-     * @return instance of this class
-     */
-    public static WorkSpace getInstance() {
-        if (_instance == null)
-            _instance = new WorkSpace();
-        return _instance;
-    }
+    public WorkSpace() { }
 
     /**
      * Add a new city and notify the observers.

@@ -17,17 +17,22 @@ public class MainFrame extends JFrame {
     private static final int DEFAULT_WINDOW_WIDTH = 800;
 
     /**
-     * Default constructor. Initializes the GUI components and their defines their responses to user actions. It also
-     * sets the TSP class as an observer of the WorkSpace class, so that it can respond to addition/movement of a city
-     * by re-evaluating the optimal route.
+     * Default constructor. Initializes the GUI components and their defines their responses to user actions. It sets
+     * the TSP class as an <tt>Observer</tt> of the WorkSpace class (the <tt>Observable</tt>), so that it can respond to
+     * addition/movement of a city by re-evaluating the optimal route. Also, the WorkSpace class is set as an
+     * <tt>Observer</tt> of the TSP class (the <tt>Observable</tt>) so that it can respond to the generation of a new
+     * route by re-drawing the new route on the panel.
      */
     public MainFrame() {
         super("Travelling Salesman Path Plotting Tool");
         setLayout(new BorderLayout());
 
-        WorkSpacePanel drawArea = new WorkSpacePanel();
         TSP tsp = new TSP();
-        WorkSpace.getInstance().addObserver(tsp);
+
+        WorkSpace workSpace = new WorkSpace();
+        workSpace.addObserver(tsp);
+
+        WorkSpacePanel drawArea = new WorkSpacePanel(workSpace);
         tsp.addObserver(drawArea);
 
         add(drawArea, BorderLayout.CENTER);
@@ -38,7 +43,7 @@ public class MainFrame extends JFrame {
 
         JMenuItem mItemNew = new JMenuItem("New");
         mItemNew.addActionListener(ev -> {
-            WorkSpace.getInstance().clearAllCities();
+            workSpace.clearAllCities();
             drawArea.repaint();
         });
 
@@ -46,7 +51,7 @@ public class MainFrame extends JFrame {
         mItemLoad.addActionListener(ev -> {
             File selectedFile = displayFileSelectionDialog();
             if (selectedFile != null) {
-                try { WorkSpace.getInstance().load(selectedFile); }
+                try { workSpace.load(selectedFile); }
                 catch (IOException e) {
                     String msg = String.format("Failed To Load Data From File\nException: %s", e);
                     JOptionPane.showMessageDialog(this, msg);
@@ -59,7 +64,7 @@ public class MainFrame extends JFrame {
         mItemSave.addActionListener(ev -> {
             File selectedFile = displayFileSaveDialog();
             if (selectedFile != null) {
-                try { WorkSpace.getInstance().save(selectedFile); }
+                try { workSpace.save(selectedFile); }
                 catch (IOException e) {
                     String msg = String.format("Failed To Save Data To File\nException: %s", e);
                     JOptionPane.showMessageDialog(this, msg);

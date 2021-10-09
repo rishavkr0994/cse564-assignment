@@ -7,21 +7,29 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * A panel to display the cities and the route between them. It allows marking of a new city with a mouse click and
- * also allows to move an existing city to a new location by clicking the city and dragging it to a new location.
+ * A panel to display the cities and the route between them. It allows marking of a new city with a mouse click and also
+ * allows to move an existing city to a new location by clicking the city and dragging it to a new location.
+ * <p>
+ * It implements the <tt>Observer</tt> interface so that it can observe an <tt><Observable</tt> (in our case, it is the
+ * TSP class) and redraw the panel.
  *
  * @author Zhuoran Li, Rishav Kumar
  * @version 1.0
  * @since 2021-10-02
  */
 public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotionListener, Observer {
+    private final WorkSpace workSpace;
+
     City clickedCity = null;
     int preX, preY;
 
     /**
-     * Default constructor. It defines the listener for the mouse actions.
+     * Default constructor. It initializes the <code>workSpace</code> object and defines the listeners for the mouse
+     * actions.
      */
-    public WorkSpacePanel() {
+    public WorkSpacePanel(WorkSpace workSpace) {
+        this.workSpace = workSpace;
+
         addMouseMotionListener(this);
         addMouseListener(this);
     }
@@ -36,10 +44,10 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        for (City city : WorkSpace.getInstance().getCityList())
+        for (City city : workSpace.getCityList())
             city.draw(g2);
 
-        java.util.List<Route> routeList = WorkSpace.getInstance().getRouteList();
+        java.util.List<Route> routeList = workSpace.getRouteList();
         if (routeList != null && routeList.size() > 0) {
             for (Route route : routeList)
                 route.getSrc().drawConnect(route.getDest(), g2);
@@ -47,17 +55,18 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     }
 
     /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
+     * This method is called whenever the observed object is changed. An application calls an <tt>Observable</tt>
+     * object's <code>notifyObservers</code> method to have all the object's observers notified of the change.
+     * <p>
+     * This function gets the route information from an <tt>Observable</tt> and call the <code>repaint</code> function
+     * to re-draw the panel.
      *
      * @param o   the observable object.
      * @param arg an argument passed to the <code>notifyObservers</code>
      */
     @Override
     public void update(Observable o, Object arg) {
-        WorkSpace.getInstance().setRouteList(((TSP)o).getRouteList());
+        workSpace.setRouteList(((TSP)o).getRouteList());
         repaint();
     }
 
@@ -79,21 +88,21 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        clickedCity = WorkSpace.getInstance().getCityList().stream()
+        clickedCity = workSpace.getCityList().stream()
                 .filter(x -> x.contains(e.getX(), e.getY()))
                 .findFirst().orElse(null);
 
         if (clickedCity != null) {
             preX = clickedCity.getX() - e.getX();
             preY = clickedCity.getY() - e.getY();
-            WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
         }
         else {
             String cityName = JOptionPane.showInputDialog(this, "Enter City Name");
             if (cityName != null && !cityName.isEmpty()) {
                 City city = new City(cityName, e.getX(), e.getY(), WorkSpace.DEFAULT_CITY_WIDTH,
                         WorkSpace.DEFAULT_CITY_HEIGHT);
-                WorkSpace.getInstance().addNewCity(city);
+                workSpace.addNewCity(city);
             }
         }
     }
@@ -114,7 +123,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     @Override
     public void mouseDragged(MouseEvent e) {
         if (clickedCity != null)
-            WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
     }
 
     /**
@@ -135,7 +144,7 @@ public class WorkSpacePanel extends JPanel implements MouseListener, MouseMotion
     @Override
     public void mouseReleased(MouseEvent e) {
         if (clickedCity != null && clickedCity.contains(e.getX(), e.getY())) {
-            WorkSpace.getInstance().moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
+            workSpace.moveExistingCity(clickedCity, preX + e.getX(), preY + e.getY());
             clickedCity = null;
         }
     }
